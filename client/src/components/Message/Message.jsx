@@ -1,20 +1,14 @@
 import styled from 'styled-components';
 import IconImage from '../IconImage';
 
-const Message = ({ profileImage, userName, isMessage, data }) => {
-  const getShortTime = () =>
-    new Date().toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-
+const Message = ({ profileImage, userName, isMessage, data, timestamp }) => {
   return (
     <MessageWrapper>
       <IconImage src={profileImage} size='sm' disabled />
       <MessageDataWrapper>
         <MessageUserNameWrapper>
           <h5>{userName}</h5>
-          <span>{getShortTime()}</span>
+          <span>{timestamp}</span>
         </MessageUserNameWrapper>
         <MessageText isMessage={isMessage}>{data}</MessageText>
       </MessageDataWrapper>

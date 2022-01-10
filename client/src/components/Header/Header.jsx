@@ -1,13 +1,11 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCircle, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../Logo';
-import { copyToClipboard } from '../../utils';
+import IconImage from '../IconImage';
+import { copyToClipboard, getPartyId } from '../../utils';
 
-const Header = ({ displayLink }) => {
-  // TODO: TEMP UNTIL I IMPLEMENT GLOBAL STATE
-  const partyUrl = `${window.location.href}?criterionParty=a50a5d25-e7a8-4238-baa1-8339493dd28d`;
-
+const Header = ({ displayLink, displayerUserIcon, userIconUrl }) => {
   return (
     <StyledHeader>
       <Logo link='/'>
@@ -21,12 +19,16 @@ const Header = ({ displayLink }) => {
       </Logo>
       <ProfileConfigContainer>
         <StyledLinkIcon
-          visible={displayLink}
+          visibility={displayLink ? 'visible' : 'hidden'}
           icon={faLink}
           size='1x'
-          onClick={() => copyToClipboard(partyUrl)}
+          onClick={() =>
+            copyToClipboard(
+              `${window.location.href}?criterionParty=${getPartyId()}`,
+            )
+          }
         />
-        <StyledFontAwesomeIcon icon={faUserCircle} size='3x' />
+        <IconImage visible={displayerUserIcon} src={userIconUrl} size='md' />
       </ProfileConfigContainer>
     </StyledHeader>
   );
@@ -38,14 +40,12 @@ const StyledHeader = styled.header`
 `;
 
 const StyledLinkIcon = styled(FontAwesomeIcon)`
-  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  cursor: pointer;
 `;
-
-const StyledFontAwesomeIcon = styled(FontAwesomeIcon)``;
 
 const ProfileConfigContainer = styled.div`
   display: flex;
-  width: 30%;
+  width: 35%;
   justify-content: space-between;
   align-items: center;
 `;

@@ -1,31 +1,48 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../components/Input';
 import IconImage from '../../components/IconImage';
 import ButtonLink from '../../components/ButtonLink';
-import { iconsList, copyToClipboard } from '../../utils';
+import { iconsList, copyToClipboard, getPartyId } from '../../utils';
+import {
+  setPartyUrl,
+  partyUrlSelect,
+  toggleChatStatus,
+} from '../../redux/partySlice';
+import {
+  setUsername,
+  setUserIcon,
+  userIconSelect,
+  userNameSelect,
+} from '../../redux/userSlice';
 
 const Setup = () => {
-  const [partyUrl, setPartyUrl] = useState('');
-  const [userNickname, setUserNickname] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState(0);
+  const dispatch = useDispatch();
+  const userName = useSelector(userNameSelect);
+  const partyUrl = useSelector(partyUrlSelect);
+  const userIcon = useSelector(userIconSelect);
 
   useEffect(() => {
-    const partyId = 'a50a5d25-e7a8-4238-baa1-8339493dd28d';
-    setPartyUrl(`${window.location.href}?criterionParty=${partyId}`);
-  }, []);
+    dispatch(
+      setPartyUrl(`${window.location.href}?criterionParty=${getPartyId()}`),
+    );
+  }, [dispatch]);
 
   return (
     <SetupWrapper>
       <h1>Choose your avatar.</h1>
       <ProfileIconContainer>
         {iconsList.map((icon, index) => (
-          <div key={`icon_${index}`} onClick={() => setSelectedIcon(index)}>
-            <IconImage size='md' src={icon} />
+          <div
+            key={`icon_${index}`}
+            onClick={() => dispatch(setUserIcon(icon))}
+          >
+            <IconImage size='md' src={icon.url} />
             <FontAwesomeIconWrapper
-              className={selectedIcon === index && 'active'}
+              className={userIcon.id === icon.id && 'active'}
               icon={faCheckCircle}
             />
           </div>
@@ -35,11 +52,12 @@ const Setup = () => {
         <Input
           id='nickname'
           name='nickname'
-          value={userNickname}
-          onChange={({ target }) => setUserNickname(target.value)}
+          value={userName}
+          onChange={({ target }) => dispatch(setUsername(target.value))}
           label='Enter a nickname'
-          placeholder='Jean Paul Belmondo'
+          placeholder={userIcon.description}
           icon={faCheckCircle}
+          autocomplete='off'
         />
         <Input
           id='url'
@@ -50,7 +68,12 @@ const Setup = () => {
           onIconClick={() => copyToClipboard(partyUrl)}
           readOnly
         />
-        <StyledButtonLink to='/chat'>Start party</StyledButtonLink>
+        <StyledButtonLink
+          to='/chat'
+          onClick={() => dispatch(toggleChatStatus())}
+        >
+          Start party
+        </StyledButtonLink>
       </SetupFormWrapper>
     </SetupWrapper>
   );

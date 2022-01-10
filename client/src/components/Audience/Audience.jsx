@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import IconImage from '../IconImage';
-import { iconsList } from '../../utils';
+import { iconsListUrls } from '../../utils';
 
 const Audience = () => {
   return (
     <AudienceWrapper>
       <IconListContainer>
-        {iconsList.map((icon, index) => (
+        {iconsListUrls.slice(0, 3).map((icon, index) => (
           <IconImage
             key={`audience_icon_${index}`}
             src={icon}

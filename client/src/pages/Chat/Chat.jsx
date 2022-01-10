@@ -18,6 +18,7 @@ const Chat = () => {
     };
     const chatInputField = document.querySelector('#chat-input');
     chatInputField.addEventListener('keyup', handleEnterKeyUp);
+    // Here, we would be setting the messages array based on WebSocket connection.
     setMessages(fakeMessages);
   }, []);
 
@@ -41,7 +42,10 @@ const Chat = () => {
   const scrollChatToBottom = () => {
     const scrollEl = document.querySelector('.chat-scroll');
     const lastMessage = document.querySelector('.chat-scroll').lastElementChild;
-    scrollEl.scrollTo(0, scrollEl.scrollHeight + lastMessage.scrollHeight);
+    scrollEl.scrollTo({
+      top: scrollEl.scrollHeight + lastMessage.scrollHeight,
+      behavior: 'smooth',
+    });
   };
 
   return (
@@ -62,14 +66,14 @@ const Chat = () => {
         <ChatInput
           id='chat-input'
           value={messageToSend}
+          placeholder='Type a message...'
           onChange={({ target }) => setMessageToSend(target.value)}
           autoComplete='off'
         />
         <ChatInputSendButton id='chat-input-send' onClick={handleMessageAdd}>
-          <FontAwesomeIcon icon={faPaperPlane} />
+          <ChatInputSendButtonIcon icon={faPaperPlane} />
         </ChatInputSendButton>
       </ChatInputWrapper>
-      <ChatInputDescription>Type a message...</ChatInputDescription>
     </ChatContainer>
   );
 };
@@ -135,12 +139,12 @@ const ChatInputSendButton = styled.div`
   cursor: pointer;
 `;
 
-const ChatInputDescription = styled.p`
-  position: relative;
-  top: 0;
-  left: 1vw;
-  font-size: 0.9rem;
+const ChatInputSendButtonIcon = styled(FontAwesomeIcon)`
   color: ${({ theme }) => theme.textSecondary};
+
+  &:hover {
+    color: ${({ theme }) => theme.textPrimary};
+  }
 `;
 
 export default Chat;

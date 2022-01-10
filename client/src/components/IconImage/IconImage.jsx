@@ -6,7 +6,7 @@ const iconImageSizeMap = {
   lg: '95px',
 };
 
-const IconImage = ({ src, size, alt, className, disabled }) => {
+const IconImage = ({ src, size, alt, className, disabled, visible = true }) => {
   return (
     <StyledIconImage
       disabled={disabled}
@@ -14,6 +14,7 @@ const IconImage = ({ src, size, alt, className, disabled }) => {
       src={src}
       alt={alt || ''}
       size={size}
+      visible={visible}
     />
   );
 };
@@ -22,6 +23,7 @@ const StyledIconImage = styled.img`
   width: ${({ size }) => iconImageSizeMap[size]};
   height: ${({ size }) => iconImageSizeMap[size]};
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
 `;
 
 export default IconImage;

@@ -1,9 +1,26 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import {
+  buttonVariants,
+  getBackground,
+  getButtonTextColor,
+  getBackgroundHoverColor,
+} from './utils';
 
-const Button = ({ className, children, to = '/', onClick }) => {
+const Button = ({
+  className,
+  children,
+  to = '/',
+  onClick,
+  variant = buttonVariants.light,
+}) => {
   return (
-    <StyledButton className={className} to={to} onClick={onClick}>
+    <StyledButton
+      className={className}
+      to={to}
+      onClick={onClick}
+      variant={variant}
+    >
       {children}
     </StyledButton>
   );
@@ -13,8 +30,8 @@ const StyledButton = styled(Link)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${({ theme }) => theme.buttonBg};
-  color: ${({ theme }) => theme.buttonText};
+  background: ${({ theme, variant }) => getBackground(variant, theme)};
+  color: ${({ theme, variant }) => getButtonTextColor(variant, theme)};
   height: 5vh;
   width: 60%;
   text-transform: uppercase;
@@ -25,7 +42,7 @@ const StyledButton = styled(Link)`
   text-decoration: none;
 
   &:hover {
-    background: lightgray;
+    background: ${({ variant }) => getBackgroundHoverColor(variant)};
   }
 `;
 

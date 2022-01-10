@@ -4,17 +4,21 @@ import brigitte from './assets/brigitte.svg';
 import karina from './assets/karina.svg';
 import marcello from './assets/marcello.svg';
 import walken from './assets/walken.svg';
+import { v4 as uuid } from 'uuid';
 
-export const icons = {
-  JPB,
-  antonine,
-  brigitte,
-  karina,
-  marcello,
-  walken,
-};
+// FOR TESTING PURPOSES
+export const iconsList = [
+  { id: 1, url: JPB, description: 'Jean Paul Belmondo' },
+  { id: 2, url: antonine, description: 'Antoine Doinel' },
+  { id: 3, url: brigitte, description: 'Brigitte Lin' },
+  { id: 4, url: karina, description: 'Ana Karina' },
+  { id: 5, url: marcello, description: 'Marcello Mastroianni' },
+  { id: 6, url: walken, description: 'Christopher Walken' },
+];
 
-export const iconsList = Object.values(icons);
+export const iconsListUrls = iconsList.map(icon => icon.url);
+
+export const getPartyId = () => uuid();
 
 export const copyToClipboard = textValue =>
   navigator.clipboard.writeText(textValue).catch(err => console.log(err));
@@ -32,7 +36,7 @@ export const isPaused = () => {
   return classList.contains(STATE_PAUSED);
 };
 
-export const playOrPause = () => getPlayButton().click();
+export const playPause = () => getPlayButton().click();
 
 export const getTimestamp = () =>
   document.querySelector('div.timecode > .box').innerText;

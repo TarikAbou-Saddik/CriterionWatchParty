@@ -1,15 +1,9 @@
 import styled from 'styled-components';
 
-const Slider = ({ onClick }) => {
-  const onToggle = ({ target }) => {
-    if (target.parentElement) {
-      target.parentElement.classList.toggle('active');
-      onClick();
-    }
-  };
+const Slider = ({ onClick, active }) => {
   return (
-    <SliderWrapper>
-      <SliderBall onClick={onToggle} />
+    <SliderWrapper active={active}>
+      <SliderBall onClick={onClick} />
     </SliderWrapper>
   );
 };
@@ -20,24 +14,23 @@ const SliderBall = styled.div`
   width: 3.5vh;
   border-radius: 15px;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: all 0.5s ease-out;
 `;
 
 const SliderWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 10px;
-  background: ${({ theme }) => theme.fgLight};
+  background: ${({ theme, active }) => (active ? theme.fgDark : theme.fgLight)};
   width: 100px;
   height: 5vh;
   border-radius: 20px;
+  transition: all 0.5s ease-out;
 
-  &.active {
-    background: ${({ theme }) => theme.fgDark};
-    ${SliderBall} {
-      transform: translateX(calc(100px - 15px - 3.5vh - 10px));
-      background: ${({ theme }) => theme.fgLight};
-    }
+  ${SliderBall} {
+    transform: ${({ active }) =>
+      active && 'translateX(calc(100px - 15px - 3.5vh - 10px))'};
+    background: ${({ theme, active }) => (active ? theme.fgLight : '#fff')};
   }
 `;
 
