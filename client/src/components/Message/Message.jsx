@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 import IconImage from '../IconImage';
 
-const Message = ({ profileImage, userName, isMessage, data, timestamp }) => {
+const Message = ({ user, isUserMessage, data, timestamp }) => {
   return (
     <MessageWrapper>
-      <IconImage src={profileImage} size='sm' disabled />
+      <IconImage src={user.userIcon.url} size='sm' disabled />
       <MessageDataWrapper>
         <MessageUserNameWrapper>
-          <h5>{userName}</h5>
+          <h5>{user.name}</h5>
           <span>{timestamp}</span>
         </MessageUserNameWrapper>
-        <MessageText isMessage={isMessage}>{data}</MessageText>
+        <MessageText isMessage={isUserMessage}>{data}</MessageText>
       </MessageDataWrapper>
     </MessageWrapper>
   );

@@ -37,6 +37,7 @@ const Header = ({ displayLink, displayerUserIcon, userIconUrl }) => {
 const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 3vh;
 `;
 
 const StyledLinkIcon = styled(FontAwesomeIcon)`

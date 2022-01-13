@@ -1,0 +1,19 @@
+{
+  "name": "Criterion Watch Party",
+  "description": "A watch party for The Criterion Channel!",
+  "version": "0.1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["https://www.criterionchannel.com/"],
+      "css": ["/static/css/main.css"],
+      "js": ["/static/js/main.js"]
+    }
+  ],
+  "icons": {
+    "16": "logo192.png",
+    "48": "logo192.png",
+    "128": "logo512.png"
+  },
+  "permissions": ["activeTab"]
+}

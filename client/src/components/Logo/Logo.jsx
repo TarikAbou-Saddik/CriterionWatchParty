@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import CriterionLogo from './assets/CriterionLogo.svg';
+import CriterionLogo from '../../assets/CriterionLogo.svg';
 
 const Logo = ({ children, link }) => {
   return (

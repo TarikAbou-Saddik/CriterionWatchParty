@@ -6,30 +6,39 @@ import { faCheckCircle, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../components/Input';
 import IconImage from '../../components/IconImage';
 import ButtonLink from '../../components/ButtonLink';
-import { iconsList, copyToClipboard, getPartyId } from '../../utils';
 import {
   setPartyUrl,
   partyUrlSelect,
-  toggleChatStatus,
+  setChatStatus,
+  addMember,
 } from '../../redux/partySlice';
 import {
   setUsername,
   setUserIcon,
   userIconSelect,
-  userNameSelect,
 } from '../../redux/userSlice';
+import { iconsList, copyToClipboard, getPartyId } from '../../utils';
 
 const Setup = () => {
   const dispatch = useDispatch();
-  const userName = useSelector(userNameSelect);
+  const user = useSelector(state => state.user);
   const partyUrl = useSelector(partyUrlSelect);
   const userIcon = useSelector(userIconSelect);
 
   useEffect(() => {
+    // TODO: Make addMember work by id. Otherwise, not great having an objet be a dependency.
+    dispatch(addMember(user));
     dispatch(
       setPartyUrl(`${window.location.href}?criterionParty=${getPartyId()}`),
     );
-  }, [dispatch]);
+  }, [dispatch, user]);
+
+  const onCreatePartyHandler = () => {
+    if (!user.name.length) {
+      dispatch(setUsername(userIcon.description));
+    }
+    dispatch(setChatStatus(true));
+  };
 
   return (
     <SetupWrapper>
@@ -52,12 +61,12 @@ const Setup = () => {
         <Input
           id='nickname'
           name='nickname'
-          value={userName}
+          value={user.name}
           onChange={({ target }) => dispatch(setUsername(target.value))}
           label='Enter a nickname'
           placeholder={userIcon.description}
           icon={faCheckCircle}
-          autocomplete='off'
+          autoComplete='off'
         />
         <Input
           id='url'
@@ -68,10 +77,7 @@ const Setup = () => {
           onIconClick={() => copyToClipboard(partyUrl)}
           readOnly
         />
-        <StyledButtonLink
-          to='/chat'
-          onClick={() => dispatch(toggleChatStatus())}
-        >
+        <StyledButtonLink to='/chat' onClick={onCreatePartyHandler}>
           Start party
         </StyledButtonLink>
       </SetupFormWrapper>

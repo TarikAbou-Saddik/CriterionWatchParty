@@ -1,5 +1,40 @@
 import { iconsList } from '../../utils';
 
+// Methods used to fetch DOM elements.
+export const getPlayButton = () => document.querySelector('button.play');
+
+export const getFilm = () => ({
+  title: getFilmTitle(),
+  timestamp: getFilmTimestamp(),
+  info: getFilmInfo(),
+});
+
+export const getStateOfFilm = () =>
+  isPlaying() ? 'Started playing the movie.' : 'Paused the movie';
+
+const getFilmTimestamp = () =>
+  document.querySelector('div.timecode > .box').innerText;
+
+const getFilmTitle = () => document.querySelector('h1.video-title').innerText;
+
+const getFilmInfo = () =>
+  document.querySelector('.read-more-wrap > p').innerText.split('\n')[0];
+
+const STATE_PLAYING = 'state-playing';
+// const STATE_PAUSED = 'state-paused';
+
+const isPlaying = () => {
+  const { classList } = getPlayButton();
+  return classList.contains(STATE_PLAYING);
+};
+
+// const isPaused = () => {
+//   const { classList } = getPlayButton();
+//   return classList.contains(STATE_PAUSED);
+// };
+
+export const playPause = () => getPlayButton().click();
+
 const DEBUG_ICON_URL_1 = iconsList[0].url;
 const DEBUG_ICON_URL_2 = iconsList[2].url;
 
@@ -16,11 +51,10 @@ const getShortTime = () =>
     minute: '2-digit',
   });
 
-export const createMessage = (data, isMessage = true) => ({
-  userName: 'TheCynicalEdge',
-  profileImage: DEBUG_ICON_URL_1,
+export const createMessage = (user, data, isUserMessage = true) => ({
+  user,
   data,
-  isMessage,
+  isUserMessage,
   timestamp: getShortTime(),
 });
 

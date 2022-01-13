@@ -5,11 +5,8 @@ const Container = ({ children }) => {
 };
 
 const ContainerWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
+  height: ${({ theme }) => theme.height};
   width: ${({ theme }) => theme.width};
-  height: 100vh;
   background-color: ${({ theme }) => theme.bg};
   padding: 5vh;
 `;

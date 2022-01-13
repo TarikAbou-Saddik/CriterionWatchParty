@@ -1,26 +1,61 @@
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Message from '../../components/Message';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector, useDispatch } from 'react-redux';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { filmInfo, fakeMessages, createMessage } from './utils';
+import Message from '../../components/Message';
+import { messagesSelect, addMessage } from '../../redux/partySlice';
+import {
+  filmInfo,
+  createMessage,
+  getPlayButton,
+  getFilm,
+  getStateOfFilm,
+} from './utils';
+import {
+  ChatContainer,
+  ChatHeaderTitleWrapper,
+  ChatHeaderWrapper,
+  ChatInputWrapper,
+  ChatInput,
+  ChatInputSendButton,
+  ChatInputSendButtonIcon,
+  ChatMessagesWrapper,
+} from './styles';
+import { getBotUser } from '../../utils';
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
+  const [film, setFilm] = useState({});
   const [messageToSend, setMessageToSend] = useState('');
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+  const messages = useSelector(messagesSelect);
 
   useEffect(() => {
+    // DOM elements
+    const chatInputField = document.querySelector('#chat-input');
+    const playBtn = getPlayButton();
+
+    // Event handlers.
     const handleEnterKeyUp = event => {
       if (event.keyCode === 13) {
         event.preventDefault();
         document.querySelector('#chat-input-send').click();
       }
     };
-    const chatInputField = document.querySelector('#chat-input');
+
+    const handlePlayOrPause = event => {
+      event.preventDefault();
+      dispatch(
+        addMessage(createMessage(getBotUser(), getStateOfFilm(), false)),
+      );
+    };
+
+    // Event listeners.
     chatInputField.addEventListener('keyup', handleEnterKeyUp);
-    // Here, we would be setting the messages array based on WebSocket connection.
-    setMessages(fakeMessages);
-  }, []);
+    if (playBtn) {
+      playBtn.addEventListener('click', handlePlayOrPause);
+      setFilm(getFilm());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (messages.length) {
@@ -30,10 +65,7 @@ const Chat = () => {
 
   const handleMessageAdd = () => {
     if (messageToSend.length) {
-      setMessages(prevMessages => [
-        ...prevMessages,
-        createMessage(messageToSend),
-      ]);
+      dispatch(addMessage(createMessage(user, messageToSend)));
       setMessageToSend('');
       scrollChatToBottom();
     }
@@ -53,8 +85,11 @@ const Chat = () => {
       <ChatHeaderWrapper>
         <p>You're currently watching...</p>
         <ChatHeaderTitleWrapper>
-          <h1>{filmInfo.title}</h1>
-          <p>{`Directed by ${filmInfo.director} · ${filmInfo.year} · ${filmInfo.country}`}</p>
+          <h1>{film.title || filmInfo.title}</h1>
+          <p>
+            {film.info ||
+              `Directed by ${filmInfo.director} · ${filmInfo.year} · ${filmInfo.country}`}
+          </p>
         </ChatHeaderTitleWrapper>
       </ChatHeaderWrapper>
       <ChatMessagesWrapper className='chat-scroll'>
@@ -77,74 +112,5 @@ const Chat = () => {
     </ChatContainer>
   );
 };
-
-const ChatContainer = styled.section``;
-
-const ChatHeaderWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5vh;
-
-  & > p {
-    font-style: italic;
-    margin-top: 8vh;
-  }
-`;
-
-const ChatHeaderTitleWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5vh;
-
-  & h1 {
-    font-size: 1.8rem;
-  }
-
-  & p {
-    font-size: 0.8rem;
-  }
-`;
-
-const ChatMessagesWrapper = styled.div`
-  height: 40vh;
-  margin: 3vh 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-  overflow-y: scroll;
-`;
-
-const ChatInputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 2vh;
-  border-bottom: 1px solid white;
-  padding: 5px 10px;
-`;
-
-const ChatInput = styled.input`
-  width: 100%;
-  &:focus {
-    outline: none;
-  }
-  border: none;
-  height: 3vh;
-  color: ${({ theme }) => theme.textPrimary};
-  background: ${({ theme }) => theme.bg};
-  padding: 20px 5px;
-  font-size: 1rem;
-`;
-
-const ChatInputSendButton = styled.div`
-  cursor: pointer;
-`;
-
-const ChatInputSendButtonIcon = styled(FontAwesomeIcon)`
-  color: ${({ theme }) => theme.textSecondary};
-
-  &:hover {
-    color: ${({ theme }) => theme.textPrimary};
-  }
-`;
 
 export default Chat;

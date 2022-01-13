@@ -32,10 +32,11 @@ const StyledButton = styled(Link)`
   justify-content: center;
   background: ${({ theme, variant }) => getBackground(variant, theme)};
   color: ${({ theme, variant }) => getButtonTextColor(variant, theme)};
-  height: 5vh;
-  width: 60%;
+  height: 50px;
+  width: 170px;
   text-transform: uppercase;
   font-weight: 400;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in;
   border-radius: 2px;

@@ -15,6 +15,7 @@ import { isChatActiveSelect, isPartyActiveSelect } from '../redux/partySlice';
 const App = () => {
   const isChatActive = useSelector(isChatActiveSelect);
   const isPartyActive = useSelector(isPartyActiveSelect);
+  const showAudience = useSelector(state => state.party.showAudience);
   const { url: userIconUrl } = useSelector(userIconSelect);
 
   return (
@@ -31,7 +32,7 @@ const App = () => {
           <Route path='/setup' element={<Setup />} />
           <Route path='/chat' element={<Chat />} />
         </Routes>
-        <Audience />
+        {showAudience && <Audience />}
       </Container>
     </ThemeProvider>
   );

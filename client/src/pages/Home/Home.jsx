@@ -5,24 +5,28 @@ import ButtonLink from '../../components/ButtonLink';
 import {
   restrictPartyControlSelect,
   togglePartyControlRestriction,
-  togglePartyStatus,
-  toggleChatStatus,
+  setPartyStatus,
+  setChatStatus,
+  isPartyActiveSelect,
   isChatActiveSelect,
 } from '../../redux/partySlice';
+import { resetUser } from '../../redux/userSlice';
 
 const Home = () => {
   const restrictPartyControl = useSelector(restrictPartyControlSelect);
+  const isPartyActive = useSelector(isPartyActiveSelect);
   const isChatActive = useSelector(isChatActiveSelect);
   const dispatch = useDispatch();
 
   const handlePartyExit = () => {
-    dispatch(toggleChatStatus());
-    dispatch(togglePartyStatus());
+    dispatch(setChatStatus(false));
+    dispatch(setPartyStatus(false));
+    dispatch(resetUser());
   };
 
   const initSection = (
-    <>
-      <HeroText fontWeight='regular'>
+    <HeroContainer>
+      <HeroText fontWeight={400}>
         Watch the best of what <span>The Criterion Collection</span> has to
         offer along with your friends and family.
       </HeroText>
@@ -33,7 +37,7 @@ const Home = () => {
           onClick={() => dispatch(togglePartyControlRestriction())}
         />
       </HeroControlContainer>
-      <ButtonLink to='/setup' onClick={() => dispatch(togglePartyStatus())}>
+      <ButtonLink to='/setup' onClick={() => dispatch(setPartyStatus())}>
         Create a party
       </ButtonLink>
       <footer>
@@ -41,39 +45,48 @@ const Home = () => {
         Criterion Channel. You must also inform your guests that they must
         download this extension off the Chrome Extensions store.
       </footer>
-    </>
+    </HeroContainer>
   );
 
   const leavePartySection = (
-    <>
+    <HeroContainer>
       <HeroText align='center' fontWeight='bold'>
         Are you sure you want to leave the party?
       </HeroText>
-      <ButtonLink to='/chat'>Return to party</ButtonLink>
+      <ButtonLink to={isChatActive ? '/chat' : '/setup'}>
+        Return to party
+      </ButtonLink>
       <ButtonLink variant='danger' onClick={handlePartyExit}>
         Leave party
       </ButtonLink>
-    </>
+    </HeroContainer>
   );
 
   return (
-    <HeroContainer>
-      {isChatActive ? leavePartySection : initSection}
-    </HeroContainer>
+    <HomeWrapper>{isPartyActive ? leavePartySection : initSection}</HomeWrapper>
   );
 };
+
+const HomeWrapper = styled.section`
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
 const HeroControlContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 2vw;
+  gap: 25px;
+  font-size: 1rem;
 `;
 
-const HeroContainer = styled.section`
+const HeroContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4vh;
+  gap: 40px;
   align-items: center;
+  justify-content: center;
 
   & footer {
     font-style: italic;
@@ -83,10 +96,9 @@ const HeroContainer = styled.section`
 `;
 
 const HeroText = styled.h1`
-  margin-top: 10vh;
   text-align: ${({ align }) => align || 'left'};
   font-weight: ${({ fontWeight }) => fontWeight || 'regular'};
-  font-size: 2.5rem;
+  font-size: 1.5rem;
 
   & span {
     display: block;

@@ -11,7 +11,11 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
+    width: ${({ theme }) => theme.width};
+    height: ${({ theme }) => theme.height};
+    border-bottom: 1px solid black;
     color: ${({ theme }) => theme.textPrimary};
+    overflow-y: hidden;
   }
 
 `;

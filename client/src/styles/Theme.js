@@ -11,4 +11,5 @@ export const darkTheme = {
   fgDark: '#323232',
   fgLight: '#C4C4C4',
   width: '400px',
+  height: '600px',
 };
