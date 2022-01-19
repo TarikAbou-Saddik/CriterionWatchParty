@@ -17,21 +17,19 @@ import {
   setUserIcon,
   userIconSelect,
 } from '../../redux/userSlice';
-import { iconsList, copyToClipboard, getPartyId } from '../../utils';
+import { iconsList, copyToClipboard } from '../../utils';
 
 const Setup = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
+  const partyId = useSelector(state => state.party.id);
   const partyUrl = useSelector(partyUrlSelect);
   const userIcon = useSelector(userIconSelect);
 
   useEffect(() => {
-    // TODO: Make addMember work by id. Otherwise, not great having an objet be a dependency.
     dispatch(addMember(user));
-    dispatch(
-      setPartyUrl(`${window.location.href}?criterionParty=${getPartyId()}`),
-    );
-  }, [dispatch, user]);
+    dispatch(setPartyUrl(`${window.location.href}?criterionParty=${partyId}`));
+  }, [dispatch, user, partyId]);
 
   const onCreatePartyHandler = () => {
     if (!user.name.length) {

@@ -1,27 +1,40 @@
 import styled from 'styled-components';
+import { useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Slider from '../../components/Slider';
 import ButtonLink from '../../components/ButtonLink';
 import {
   restrictPartyControlSelect,
-  togglePartyControlRestriction,
+  setPartyControlRestriction,
   setPartyStatus,
   setChatStatus,
   isPartyActiveSelect,
   isChatActiveSelect,
 } from '../../redux/partySlice';
 import { resetUser } from '../../redux/userSlice';
+import { WebSocketContext } from '../../app/websocket';
 
 const Home = () => {
   const restrictPartyControl = useSelector(restrictPartyControlSelect);
   const isPartyActive = useSelector(isPartyActiveSelect);
   const isChatActive = useSelector(isChatActiveSelect);
   const dispatch = useDispatch();
+  const { createParty, restrictControl } = useContext(WebSocketContext);
+
+  const handleCreateParty = () => {
+    createParty();
+    dispatch(setPartyStatus());
+  };
 
   const handlePartyExit = () => {
     dispatch(setChatStatus(false));
     dispatch(setPartyStatus(false));
     dispatch(resetUser());
+  };
+
+  const handleRestrictPartyControl = () => {
+    dispatch(setPartyControlRestriction(!restrictPartyControl));
+    restrictControl(!restrictPartyControl);
   };
 
   const initSection = (
@@ -34,10 +47,10 @@ const Home = () => {
         Restrict party control
         <Slider
           active={restrictPartyControl}
-          onClick={() => dispatch(togglePartyControlRestriction())}
+          onClick={handleRestrictPartyControl}
         />
       </HeroControlContainer>
-      <ButtonLink to='/setup' onClick={() => dispatch(setPartyStatus())}>
+      <ButtonLink to='/setup' onClick={handleCreateParty}>
         Create a party
       </ButtonLink>
       <footer>

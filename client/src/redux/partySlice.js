@@ -9,27 +9,28 @@ const welcomeMessage = {
   isUserMessage: false,
 };
 
+const initialState = {
+  id: null,
+  restrictPartyControlToLeader: false,
+  // TODO: need to implement logic for creating a partyUrl server-side.
+  partyUrl: '',
+  dateCreated: new Date().toLocaleTimeString(),
+  users: [],
+  messages: [welcomeMessage],
+  isPartyActive: false,
+  isChatActive: false,
+  showAudience: false,
+};
+
 export const partySlice = createSlice({
   name: 'party',
-  initialState: {
-    // TODO: need to implement logic for creating an id for the party server-side.
-    id: null,
-    restrictPartyControlToLeader: false,
-    isPartyActive: false,
-    isChatActive: false,
-    showAudience: false,
-    // TODO: need to implement logic for creating a partyUrl server-side.
-    partyUrl: '',
-    dateCreated: null,
-    // TODO: need a reducer for dealing with new connecting users
-    users: [],
-    // Server should supply default message at start.
-    // Server should also suppy any connection or leave messages.
-    messages: [welcomeMessage],
-  },
+  initialState,
   reducers: {
-    togglePartyControlRestriction: state => {
-      state.restrictPartyControlToLeader = !state.restrictPartyControlToLeader;
+    setPartyControlRestriction: (state, action) => {
+      state.restrictPartyControlToLeader = action.payload;
+    },
+    setPartyId: (state, action) => {
+      state.id = action.payload;
     },
     setPartyUrl: (state, action) => {
       state.partyUrl = action.payload;
@@ -69,10 +70,11 @@ export const isChatActiveSelect = state => state.party.isChatActive;
 export const usersSelect = state => state.party.users;
 export const messagesSelect = state => state.party.messages;
 
-// Actions
+// Exported action
 export const {
-  togglePartyControlRestriction,
+  setPartyControlRestriction,
   setPartyUrl,
+  setPartyId,
   setPartyStatus,
   setChatStatus,
   addMember,
