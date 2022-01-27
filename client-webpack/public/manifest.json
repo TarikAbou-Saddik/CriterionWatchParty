@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Criterion Watch Party",
+  "version": "0.1.0",
+  "description": "A watch party for The Criterion Channel!",
+  "action": {
+    "default_title": "Criterion Channel Watch Party",
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "logo192.png",
+    "48": "logo192.png",
+    "128": "logo512.png"
+  },
+  "permissions": ["activeTab", "storage"]
+}
