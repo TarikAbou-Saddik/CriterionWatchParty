@@ -36,6 +36,7 @@ const SliderWrapper = styled.div<BaseSliderProps>`
   height: 35px;
   border-radius: 20px;
   transition: all 0.5s ease-out;
+  transition-property: background transform;
 
   ${SliderBall} {
     transform: ${({ active }) =>

@@ -1,39 +1,67 @@
+import { User, Message, Film } from '../../types';
 import { iconsList } from '../../utils';
 
-// Methods used to fetch DOM elements.
-export const getPlayButton = () => document.querySelector('button.play');
+export const getPlayButton = () => getElement('button.play') as HTMLElement;
+export const playPause = () => getPlayButton().click();
 
-export const getFilm = () => ({
+export const getStateOfFilm = () =>
+  isPlaying() ? 'Started playing the movie.' : 'Paused the movie';
+
+export const getFilm = (): Film => ({
   title: getFilmTitle(),
   timestamp: getFilmTimestamp(),
   info: getFilmInfo(),
 });
 
-export const getStateOfFilm = () =>
-  isPlaying() ? 'Started playing the movie.' : 'Paused the movie';
+export const createMessage = (
+  user: User,
+  data: string,
+  isUserMessage = true,
+): Message => ({
+  id: null,
+  user,
+  data,
+  isUserMessage,
+  timestamp: getShortTime(),
+});
 
 const getFilmTimestamp = () =>
-  document.querySelector('div.timecode > .box').innerText;
+  (getElement('div.timecode > .box') as HTMLElement).innerText;
 
-const getFilmTitle = () => document.querySelector('h1.video-title').innerText;
+const getFilmTitle = () =>
+  (getElement('h1.video-title') as HTMLElement).innerText;
 
 const getFilmInfo = () =>
-  document.querySelector('.read-more-wrap > p').innerText.split('\n')[0];
-
-const STATE_PLAYING = 'state-playing';
-// const STATE_PAUSED = 'state-paused';
+  (getElement('.read-more-wrap > p') as HTMLElement).innerText.split('\n')[0];
 
 const isPlaying = () => {
+  const STATE_PLAYING = 'state-playing';
   const { classList } = getPlayButton();
   return classList.contains(STATE_PLAYING);
 };
 
-// const isPaused = () => {
-//   const { classList } = getPlayButton();
-//   return classList.contains(STATE_PAUSED);
-// };
+const getElement = (stringSelector: string) => {
+  try {
+    const el = document.querySelector(stringSelector);
+    if (el) {
+      return el;
+    }
+    throw new Error(
+      `document.querySelector(${stringSelector}) return null. Element does not exist.`,
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-export const playPause = () => getPlayButton().click();
+const getShortTime = () =>
+  new Date().toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+// ========================= DEBUG ====================================
+// TODO: GET RID OF THIS EVENTUALLY
 
 const DEBUG_ICON_URL_1 = iconsList[0].url;
 const DEBUG_ICON_URL_2 = iconsList[2].url;
@@ -44,19 +72,6 @@ export const filmInfo = {
   year: 1949,
   country: 'United Kingdom',
 };
-
-const getShortTime = () =>
-  new Date().toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-export const createMessage = (user, data, isUserMessage = true) => ({
-  user,
-  data,
-  isUserMessage,
-  timestamp: getShortTime(),
-});
 
 export const fakeMessages = [
   {

@@ -20,11 +20,13 @@ export const ChatHeaderTitleWrapper = styled.div`
   gap: 0.5vh;
 
   & h1 {
+    color: inherit;
+    font-weight: bold;
     font-size: 1.8rem;
   }
 
   & p {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 `;
 
@@ -52,8 +54,8 @@ export const ChatInput = styled.input`
   }
   border: none;
   height: 3vh;
-  color: ${({ theme }) => theme.textPrimary};
-  background: ${({ theme }) => theme.bg};
+  color: inherit;
+  background: inherit;
   padding: 20px 5px;
   font-size: 1rem;
 `;

@@ -1,15 +1,25 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
+interface InputProps {
+  className?: string;
+  label?: string;
+  value?: string | number;
+  icon?: IconProp;
+  id?: string;
+  onIconClick?: () => void;
+}
 
 const Input = ({
-  className,
+  className = '',
   label,
   value,
   icon,
   id,
   onIconClick,
   ...inputProps
-}) => {
+}: InputProps & React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <InputWrapper>
       <StyledLabel htmlFor={id}>{label}</StyledLabel>

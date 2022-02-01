@@ -9,7 +9,7 @@ const iconImageSizeMap: { [key: string]: string } = {
 interface IconImageBaseProps {
   disabled?: boolean;
   size: string;
-  visible: boolean;
+  visible?: boolean;
 }
 
 interface IconImageProps extends IconImageBaseProps {

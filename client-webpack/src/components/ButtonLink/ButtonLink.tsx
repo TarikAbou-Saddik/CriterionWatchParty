@@ -51,7 +51,7 @@ const StyledButton = styled(Link)<BaseButtonProps>`
   font-weight: 400;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease-in;
+  transition: background 0.2s ease-in;
   border-radius: 2px;
   text-decoration: none;
   padding: 0 5vw;

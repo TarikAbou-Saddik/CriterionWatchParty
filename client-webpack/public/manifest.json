@@ -7,10 +7,23 @@
     "default_title": "Criterion Channel Watch Party",
     "default_popup": "popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.criterionchannel.com/",
+        "https://www.criterionchannel.com/*"
+      ],
+      "js": ["./static/js/content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "./static/js/background.js"
+  },
   "icons": {
     "16": "logo192.png",
     "48": "logo192.png",
     "128": "logo512.png"
   },
-  "permissions": ["activeTab", "storage"]
+  "permissions": ["activeTab", "storage", "tabs", "scripting"]
 }

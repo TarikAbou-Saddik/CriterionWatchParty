@@ -1,21 +1,14 @@
-export type Action = {
-  type: string;
-  payload?: any;
-};
-
-export type PartyPageType = 'INIT' | 'SETUP' | 'CHAT';
-
 export interface UserIcon {
-  id: number;
+  id?: number | null;
   url: string;
   description: string;
 }
 
 export interface User {
-  id: number | null;
-  dateCreated: Date | null;
+  id?: number | null;
+  dateCreated?: Date | null;
   name: string;
-  icon?: UserIcon;
+  icon?: UserIcon | null;
 }
 
 export interface Message {
@@ -26,6 +19,12 @@ export interface Message {
   isUserMessage: boolean;
 }
 
+export interface Film {
+  title: string;
+  timestamp: string;
+  info: string;
+}
+
 export interface PartyState {
   id: number | null;
   restrictPartyControl: boolean;
@@ -33,6 +32,7 @@ export interface PartyState {
   dateCreated: string | null;
   users: User[];
   messages: Message[];
-  currentPage: PartyPageType;
   showAudience: boolean;
+  isChatActive: boolean;
+  isPartyCreated: boolean;
 }

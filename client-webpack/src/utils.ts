@@ -5,10 +5,10 @@ import karina from './assets/karina.svg';
 import marcello from './assets/marcello.svg';
 import walken from './assets/walken.svg';
 import CriterionLogo from './assets/CriterionLogo.svg';
-import { v4 as uuid } from 'uuid';
+import { UserIcon } from './types';
 
 // Utility functions
-export const copyToClipboard = textValue =>
+export const copyToClipboard = (textValue: string) =>
   navigator.clipboard.writeText(textValue).catch(err => console.log(err));
 
 export const getShortTime = () =>
@@ -28,7 +28,7 @@ export const getBotUser = () => ({
     description: 'Criterion Collection logo',
   },
 });
-export const iconsList = [
+export const iconsList: UserIcon[] = [
   { id: 1, url: JPB, description: 'Jean Paul Belmondo' },
   { id: 2, url: antonine, description: 'Antoine Doinel' },
   { id: 3, url: brigitte, description: 'Brigitte Lin' },
@@ -37,4 +37,3 @@ export const iconsList = [
   { id: 6, url: walken, description: 'Christopher Walken' },
 ];
 export const iconsListUrls = iconsList.map(icon => icon.url);
-export const getPartyId = () => uuid();

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../Logo';
 import IconImage from '../IconImage';
-import { copyToClipboard, getPartyId } from '../../utils';
+import { copyToClipboard } from '../../utils';
 
 interface HeaderProps {
   displayLink: boolean;
@@ -24,19 +24,15 @@ const Header = ({ displayLink, displayUserIcon, userIconUrl }: HeaderProps) => {
         <br />
         Party
       </Logo>
-      <ProfileConfigContainer>
+      {/* <ProfileConfigContainer>
         <StyledLinkIcon
           visibility={displayLink ? 'visible' : 'hidden'}
           icon={faLink}
           size='1x'
-          onClick={() =>
-            copyToClipboard(
-              `${window.location.href}?criterionParty=${getPartyId()}`,
-            )
-          }
+          onClick={() => {}}
         />
         <IconImage visible={displayUserIcon} src={userIconUrl} size='md' />
-      </ProfileConfigContainer>
+      </ProfileConfigContainer> */}
     </StyledHeader>
   );
 };

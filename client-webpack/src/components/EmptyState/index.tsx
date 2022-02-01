@@ -2,11 +2,23 @@ import styled from 'styled-components';
 import { redirectToCriterionChannel } from '../../utils/chromeUtils';
 import ButtonLink from '../ButtonLink';
 
-const EmptyState = () => {
+interface EmptyStateProps {
+  url?: string;
+}
+
+const EmptyState = ({ url }: EmptyStateProps) => {
   return (
     <WrongSiteWrapper>
-      <p>To use the extension, please head to The Criterion Channel.</p>
-      <ButtonLink onClick={redirectToCriterionChannel}>Click Here</ButtonLink>
+      {url?.includes('criterionchannel') ? (
+        <p>Start watching a film to be able create a party.</p>
+      ) : (
+        <>
+          <p>To use the extension, please head to The Criterion Channel.</p>
+          <ButtonLink onClick={redirectToCriterionChannel}>
+            Click Here
+          </ButtonLink>
+        </>
+      )}
     </WrongSiteWrapper>
   );
 };

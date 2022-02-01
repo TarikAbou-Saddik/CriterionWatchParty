@@ -15,12 +15,12 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@reduxjs/toolkit": "^1.7.1",
-    "@types/chrome": "^0.0.177",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.2.1",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.10",
@@ -28,6 +28,7 @@
     "@babel/preset-env": "^7.16.10",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
+    "@types/chrome": "^0.0.177",
     "@types/react-dom": "^17.0.11",
     "@types/react-fontawesome": "^1.6.5",
     "@types/react-router-dom": "^5.3.3",

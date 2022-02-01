@@ -1,37 +1,79 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import Container from '../components/Container';
 import Header from '../components/Header';
 import EmptyState from '../components/EmptyState';
 import Popup from '../pages/Popup';
 import Setup from '../pages/Setup';
-import Chat from '../pages/Chat';
-
-// TODO: Remove this call. Debug only.
 import { iconsListUrls } from '../utils';
-import { isActiveTabCriterionChannel } from '../utils/chromeUtils';
-import { getChromeState } from '../redux/partySlice/thunks';
-
+import {
+  getActiveTabUrl,
+  getChromeState,
+  setChromeStorageValue,
+} from '../utils/chromeUtils';
 const userIconUrl = iconsListUrls[0];
-const isChatActive = false;
-const isPartyCreated = false;
 
 const App = () => {
-  const dispatch = useDispatch();
-  const [isCriterionChannelUrl, setIsCriterionChannelUrl] = useState(false);
+  const [hasInit, setHasInit] = useState(false);
+  const [displayExtension, setDisplayExtension] = useState(false);
+  const [activeTabUrl, setActiveTabUrl] = useState<string | undefined>();
+  // State that should be persisted to chrome.storage
+  const [isChatActive, setIsChatActive] = useState(false);
+  const [isPartyCreated, setIsPartyCreated] = useState(false);
+  const [restrictPartyControl, setRestrictPartyControl] = useState(false);
 
   useEffect(() => {
     const init = async () => {
-      setIsCriterionChannelUrl(await isActiveTabCriterionChannel());
-      dispatch(getChromeState('isPartyRestricted'));
+      const activeTabUrl = await getActiveTabUrl();
+      const isOnFilmPage =
+        activeTabUrl?.includes('criterionchannel.com/videos') || false;
+      const { success, data: restrictPartyControlExists } =
+        await getChromeState('restrictPartyControl');
+      if (success) {
+        setRestrictPartyControl(restrictPartyControlExists);
+        setHasInit(true);
+      } else {
+        console.error(restrictPartyControlExists);
+      }
+      setActiveTabUrl(activeTabUrl);
+      setDisplayExtension(isOnFilmPage);
     };
     init();
   }, []);
 
+  useEffect(() => {
+    const update = async () => {
+      const { data, success } = await setChromeStorageValue({
+        key: 'restrictPartyControl',
+        value: restrictPartyControl,
+      });
+      if (!success) {
+        console.error(`Failed to persist restrictPartyControl: ${data}`);
+      }
+    };
+    if (hasInit) {
+      update();
+    }
+  }, [restrictPartyControl]);
+
+  const resetState = async () => {
+    setIsPartyCreated(false);
+    setIsChatActive(false);
+    setRestrictPartyControl(false);
+  };
+
+  const handleSetupCompletion = async (isExit: boolean) => {
+    if (isExit) {
+      await resetState();
+      // TODO: Remove state that has been saved to chrome.storage
+    } else {
+      setIsPartyCreated(true);
+    }
+  };
+
   return (
     <Container>
-      {isCriterionChannelUrl ? (
+      {displayExtension ? (
         <>
           <Header
             displayLink={isChatActive}
@@ -39,13 +81,23 @@ const App = () => {
             userIconUrl={userIconUrl}
           />
           <Routes>
-            <Route path='/' element={<Popup />} />
+            <Route
+              path='/'
+              element={
+                <Popup
+                  isChatActive={isChatActive}
+                  isPartyCreated={isPartyCreated}
+                  handleSetup={handleSetupCompletion}
+                  restrictPartyControl={restrictPartyControl}
+                  handleControl={() => setRestrictPartyControl(prev => !prev)}
+                />
+              }
+            />
             <Route path='/setup' element={<Setup />} />
-            <Route path='/chat' element={<Chat />} />
           </Routes>
         </>
       ) : (
-        <EmptyState />
+        <EmptyState url={activeTabUrl} />
       )}
     </Container>
   );

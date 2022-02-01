@@ -1,1 +1,0 @@
-export { useChromeStorage } from './useChromeStorage';

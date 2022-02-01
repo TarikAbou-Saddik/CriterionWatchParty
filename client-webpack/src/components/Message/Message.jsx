@@ -4,7 +4,7 @@ import IconImage from '../IconImage';
 const Message = ({ user, isUserMessage, data, timestamp }) => {
   return (
     <MessageWrapper>
-      <IconImage src={user.userIcon.url} size='sm' disabled />
+      <IconImage src={user.icon.url} size='sm' disabled />
       <MessageDataWrapper>
         <MessageUserNameWrapper>
           <h5>{user.name}</h5>

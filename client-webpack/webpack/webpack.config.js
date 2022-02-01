@@ -6,11 +6,14 @@ const projectDirectory = path.join(__dirname, '..');
 module.exports = {
   entry: {
     popup: path.join(projectDirectory, './src/index.tsx'),
+    background: path.join(projectDirectory, './src/app/background.ts'),
+    content: path.join(projectDirectory, './src/app/content.tsx'),
   },
   output: {
     path: path.resolve(projectDirectory, './build'),
     filename: 'static/js/[name].js',
     assetModuleFilename: 'static/media/[name][hash:8].[ext]',
+    publicPath: '',
     clean: true,
   },
   resolve: {
