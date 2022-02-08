@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import Message from '../../components/Message';
-import { messagesSelect, addMessage } from '../../redux/partySlice/partySlice';
 import {
-  filmInfo,
+  faPaperPlane,
+  faChevronCircleRight,
+} from '@fortawesome/free-solid-svg-icons';
+import Message from '../../components/Message';
+import {
+  getFilm,
   createMessage,
   getPlayButton,
   getStateOfFilm,
+  fakeMessages,
+  getUser,
 } from './utils';
 import {
   ChatContainer,
@@ -18,34 +21,37 @@ import {
   ChatInputSendButton,
   ChatInputSendButtonIcon,
   ChatMessagesWrapper,
+  ChatWrapper,
+  ChatHideButton,
+  ChatHideButtonChevron,
 } from './styles';
-import { getBotUser, iconsListUrls } from '../../utils';
-import { RootState, useAppDispatch } from '../../app/store';
+import { Film, IMessage, User } from '../../types';
+import Audience from '../../components/Audience';
 import Header from '../../components/Header';
-
-const userIconUrl = iconsListUrls[0];
+import { staticCriterionLogo } from '../../utils/mediaUtils';
 
 const Chat = () => {
   const [messageToSend, setMessageToSend] = useState('');
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>(fakeMessages);
+  const [film, setFilm] = useState<Film>(getFilm());
+  // TODO: This should come from chrome.storage.local.get()
+  const [user, setUser] = useState<User>(getUser('TheCynicalEdge'));
+  const [hideChat, setHideChat] = useState(false);
 
-  // const dispatch = useAppDispatch();
-  // const user = useSelector((state: RootState) => state.user);
-  // const messages = useSelector(messagesSelect);
-
-  // useEffect(() => {
-  //   const handlePlayOrPause = (event: any) => {
-  //     event.preventDefault();
-  //     dispatch(
-  //       addMessage(createMessage(getBotUser(), getStateOfFilm(), false)),
-  //     );
-  //   };
-
-  //   const playBtn = getPlayButton();
-  //   if (playBtn) {
-  //     playBtn.addEventListener('click', handlePlayOrPause);
-  //   }
-  // }, [dispatch]);
+  useEffect(() => {
+    const handleClick = ({ target }: { target: EventTarget | null }) => {
+      const clickedEl = target as Element;
+      if (clickedEl.matches('button.play')) {
+        const message = `${user.name} has clicked play!`;
+        setMessages(prev => [...prev, createMessage(user, message, false)]);
+      }
+    };
+    // Grab the iFrame
+    // const iFrame = document.getElementById('watch-embed') as HTMLIFrameElement;
+    // const playBtn =
+    //   iFrame.contentWindow?.document.querySelector('button.play') ||
+    //   iFrame.contentDocument?.querySelector('button.play');
+  }, []);
 
   useEffect(() => {
     if (messages.length) {
@@ -55,8 +61,7 @@ const Chat = () => {
 
   const handleMessageAdd = () => {
     if (messageToSend.length) {
-      // dispatch(addMessage(createMessage(user, messageToSend)));
-      setMessages((prev: string[]) => [...prev, messageToSend]);
+      setMessages(prev => [...prev, createMessage(user, messageToSend)]);
       setMessageToSend('');
       scrollChatToBottom();
     }
@@ -82,21 +87,27 @@ const Chat = () => {
   };
 
   return (
-    <>
+    <ChatWrapper hidden={hideChat}>
+      {/* <ChatHideButton onClick={() => setHideChat(prev => !prev)}>
+        <ChatHideButtonChevron icon={faChevronCircleRight} />
+      </ChatHideButton> */}
+      <Header
+        displayLink={false}
+        displayUserIcon={true}
+        userIconUrl={user.icon?.url as string}
+        logoUrl={staticCriterionLogo}
+      />
       <ChatContainer>
         <ChatHeaderWrapper>
           <p>You're currently watching...</p>
           <ChatHeaderTitleWrapper>
-            <h1>{filmInfo.title}</h1>
-            <p>
-              {`Directed by ${filmInfo.director} · ${filmInfo.year} · ${filmInfo.country}`}
-            </p>
+            <h1>{film?.title}</h1>
+            <p>{film?.info}</p>
           </ChatHeaderTitleWrapper>
         </ChatHeaderWrapper>
         <ChatMessagesWrapper className='chat-scroll'>
           {messages.map((message, index) => (
-            // <Message key={`message_${index}`} {...message} />
-            <p key={`message_${index}`}>{message}</p>
+            <Message key={`message_${index}`} {...message} />
           ))}
         </ChatMessagesWrapper>
         <ChatInputWrapper>
@@ -113,7 +124,8 @@ const Chat = () => {
           </ChatInputSendButton>
         </ChatInputWrapper>
       </ChatContainer>
-    </>
+      <Audience />
+    </ChatWrapper>
   );
 };
 

@@ -3,19 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../Logo';
 import IconImage from '../IconImage';
-import { copyToClipboard } from '../../utils';
 
 interface HeaderProps {
   displayLink: boolean;
   displayUserIcon: boolean;
   userIconUrl: string;
+  logoUrl: string;
 }
 
-const Header = ({ displayLink, displayUserIcon, userIconUrl }: HeaderProps) => {
-  console.log(`Rendering Header component!`);
+const Header = ({
+  displayLink,
+  displayUserIcon,
+  userIconUrl,
+  logoUrl,
+}: HeaderProps) => {
   return (
     <StyledHeader>
-      <Logo link='/'>
+      <Logo link='/' logoUrl={logoUrl}>
         The
         <br />
         Criterion
@@ -24,15 +28,16 @@ const Header = ({ displayLink, displayUserIcon, userIconUrl }: HeaderProps) => {
         <br />
         Party
       </Logo>
-      {/* <ProfileConfigContainer>
+      <ProfileConfigContainer>
         <StyledLinkIcon
           visibility={displayLink ? 'visible' : 'hidden'}
           icon={faLink}
           size='1x'
+          // TODO: Modify this event handler to do something.
           onClick={() => {}}
         />
         <IconImage visible={displayUserIcon} src={userIconUrl} size='md' />
-      </ProfileConfigContainer> */}
+      </ProfileConfigContainer>
     </StyledHeader>
   );
 };

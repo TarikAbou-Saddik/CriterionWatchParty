@@ -1,11 +1,15 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import CriterionLogo from '../../assets/CriterionLogo.svg';
 
-const Logo = ({ children, link }) => {
+interface LogoProps {
+  children?: React.ReactNode;
+  link: string;
+  logoUrl: string;
+}
+
+const Logo = ({ children, link, logoUrl }: LogoProps) => {
   return (
-    <LogoWrapper to={link}>
-      <LogoImage src={CriterionLogo} alt='Criterion logo' />
+    <LogoWrapper>
+      <LogoImage src={logoUrl} alt='Criterion logo' />
       <LogoHeader>{children}</LogoHeader>
     </LogoWrapper>
   );
@@ -13,7 +17,7 @@ const Logo = ({ children, link }) => {
 
 const LogoImageSize = '60px';
 
-const LogoWrapper = styled(Link)`
+const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -31,6 +35,7 @@ const LogoHeader = styled.h1`
   font-weight: 300;
   font-size: 0.8rem;
   text-transform: uppercase;
+  color: ${({ theme }) => theme.textPrimary};
 `;
 
 export default Logo;

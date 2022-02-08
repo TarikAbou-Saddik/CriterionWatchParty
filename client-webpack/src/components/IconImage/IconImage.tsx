@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const iconImageSizeMap: { [key: string]: string } = {
-  sm: '30px',
+  icon: '25px',
+  sm: '40px',
   md: '65px',
   lg: '95px',
 };

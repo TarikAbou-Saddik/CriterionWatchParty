@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyles = createGlobalStyle`
+export const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
     margin: 0;
@@ -18,4 +18,13 @@ const GlobalStyles = createGlobalStyle`
 
 `;
 
-export default GlobalStyles;
+export const ChatStyles = createGlobalStyle`
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+`;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import IconImage from '../IconImage';
-import { iconsListUrls } from '../../utils';
+import { iconsListStaticUrls as iconsListUrls } from '../../utils/mediaUtils';
 
 const Audience = () => {
   return (
@@ -20,7 +20,7 @@ const Audience = () => {
   );
 };
 
-const AudienceWrapper = styled.div`
+const AudienceWrapper = styled.footer`
   margin: 5vh auto;
   display: flex;
   flex-direction: column;
@@ -30,7 +30,7 @@ const AudienceWrapper = styled.div`
 
   & span {
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 500;
     color: ${({ theme }) => theme.textSecondary};
   }

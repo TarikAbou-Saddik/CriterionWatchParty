@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { faCheckCircle, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../components/Input';
 import IconImage from '../../components/IconImage';
-import { iconsList, copyToClipboard } from '../../utils';
+import { copyToClipboard } from '../../utils';
+import { iconsList } from '../../utils/mediaUtils';
+import {
+  getActiveTabUrl,
+  sendMessageToContentScript,
+} from '../../utils/chromeUtils';
+import { User, UserIcon } from '../../types';
 import {
   FontAwesomeIconWrapper,
   ProfileIconContainer,
@@ -10,11 +16,6 @@ import {
   SetupWrapper,
   StyledButtonLink,
 } from './styles';
-import {
-  getActiveTabUrl,
-  sendMessageToContentScript,
-} from '../../utils/chromeUtils';
-import { User, UserIcon } from '../../types';
 
 const initUser: User = {
   id: null,
@@ -49,10 +50,19 @@ const Setup = () => {
     if (!currentUser.name.length) {
       handleCurrentUserChange('name', selectedUserIcon.description);
     }
+    // const filmEmbedUrl = (
+    //   document.querySelector('#watch-embed') as HTMLIFrameElement
+    // ).src;
+    // chrome.tabs.update({ url: filmEmbedUrl });
+
     await sendMessageToContentScript({
-      action: 'INSERT_CHAT',
+      action: 'REDIRECT_TO_EMBED',
     });
+    // await sendMessageToContentScript({
+    //   action: 'INSERT_CHAT',
+    // });
     // TODO: Set currentPage in chrome.storage
+    // TODO: Redirect user to embed.criterionchannel.com
     window.close();
   };
 

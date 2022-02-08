@@ -11,8 +11,8 @@ export interface User {
   icon?: UserIcon | null;
 }
 
-export interface Message {
-  id: number | null;
+export interface IMessage {
+  id?: number | null;
   user: User;
   data: string;
   timestamp: string;
@@ -21,7 +21,7 @@ export interface Message {
 
 export interface Film {
   title: string;
-  timestamp: string;
+  timestamp: string | null;
   info: string;
 }
 
@@ -31,7 +31,7 @@ export interface PartyState {
   partyUrl: string;
   dateCreated: string | null;
   users: User[];
-  messages: Message[];
+  messages: IMessage[];
   showAudience: boolean;
   isChatActive: boolean;
   isPartyCreated: boolean;

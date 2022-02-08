@@ -5,12 +5,14 @@ import Header from '../components/Header';
 import EmptyState from '../components/EmptyState';
 import Popup from '../pages/Popup';
 import Setup from '../pages/Setup';
-import { iconsListUrls } from '../utils';
+import { iconsListUrls } from '../utils/mediaUtils';
+import CriterionLogo from '../assets/CriterionLogo.svg';
 import {
   getActiveTabUrl,
   getChromeState,
   setChromeStorageValue,
 } from '../utils/chromeUtils';
+
 const userIconUrl = iconsListUrls[0];
 
 const App = () => {
@@ -22,11 +24,14 @@ const App = () => {
   const [isPartyCreated, setIsPartyCreated] = useState(false);
   const [restrictPartyControl, setRestrictPartyControl] = useState(false);
 
+  const isWatchingAFilm = (url: string | undefined) =>
+    url?.includes('criterionchannel.com/videos') ||
+    url?.includes('videos') ||
+    false;
+
   useEffect(() => {
     const init = async () => {
       const activeTabUrl = await getActiveTabUrl();
-      const isOnFilmPage =
-        activeTabUrl?.includes('criterionchannel.com/videos') || false;
       const { success, data: restrictPartyControlExists } =
         await getChromeState('restrictPartyControl');
       if (success) {
@@ -36,7 +41,7 @@ const App = () => {
         console.error(restrictPartyControlExists);
       }
       setActiveTabUrl(activeTabUrl);
-      setDisplayExtension(isOnFilmPage);
+      setDisplayExtension(isWatchingAFilm(activeTabUrl));
     };
     init();
   }, []);
@@ -65,11 +70,22 @@ const App = () => {
   const handleSetupCompletion = async (isExit: boolean) => {
     if (isExit) {
       await resetState();
-      // TODO: Remove state that has been saved to chrome.storage
     } else {
       setIsPartyCreated(true);
     }
   };
+
+  const mainContent = isPartyCreated ? (
+    <Setup />
+  ) : (
+    <Popup
+      isChatActive={isChatActive}
+      isPartyCreated={isPartyCreated}
+      handleSetup={handleSetupCompletion}
+      restrictPartyControl={restrictPartyControl}
+      handleControl={() => setRestrictPartyControl(prev => !prev)}
+    />
+  );
 
   return (
     <Container>
@@ -79,22 +95,9 @@ const App = () => {
             displayLink={isChatActive}
             displayUserIcon={isPartyCreated}
             userIconUrl={userIconUrl}
+            logoUrl={CriterionLogo}
           />
-          <Routes>
-            <Route
-              path='/'
-              element={
-                <Popup
-                  isChatActive={isChatActive}
-                  isPartyCreated={isPartyCreated}
-                  handleSetup={handleSetupCompletion}
-                  restrictPartyControl={restrictPartyControl}
-                  handleControl={() => setRestrictPartyControl(prev => !prev)}
-                />
-              }
-            />
-            <Route path='/setup' element={<Setup />} />
-          </Routes>
+          {mainContent}
         </>
       ) : (
         <EmptyState url={activeTabUrl} />

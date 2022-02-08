@@ -12,7 +12,7 @@ module.exports = {
   output: {
     path: path.resolve(projectDirectory, './build'),
     filename: 'static/js/[name].js',
-    assetModuleFilename: 'static/media/[name][hash:8].[ext]',
+    assetModuleFilename: 'static/media/[name][ext]',
     publicPath: '',
     clean: true,
   },

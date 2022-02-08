@@ -1,5 +1,5 @@
-import { User, Message, Film } from '../../types';
-import { iconsList } from '../../utils';
+import { User, IMessage, Film, UserIcon } from '../../types';
+import { iconsListStatic as iconsList } from '../../utils/mediaUtils';
 
 export const getPlayButton = () => getElement('button.play') as HTMLElement;
 export const playPause = () => getPlayButton().click();
@@ -9,7 +9,8 @@ export const getStateOfFilm = () =>
 
 export const getFilm = (): Film => ({
   title: getFilmTitle(),
-  timestamp: getFilmTimestamp(),
+  // timestamp: getFilmTimestamp(),
+  timestamp: '',
   info: getFilmInfo(),
 });
 
@@ -17,7 +18,7 @@ export const createMessage = (
   user: User,
   data: string,
   isUserMessage = true,
-): Message => ({
+): IMessage => ({
   id: null,
   user,
   data,
@@ -25,8 +26,13 @@ export const createMessage = (
   timestamp: getShortTime(),
 });
 
-const getFilmTimestamp = () =>
-  (getElement('div.timecode > .box') as HTMLElement).innerText;
+const getFilmTimestamp = () => {
+  const el = getElement('div.timecode > .box') as HTMLElement | null;
+  if (el) {
+    return el.innerText;
+  }
+  return el;
+};
 
 const getFilmTitle = () =>
   (getElement('h1.video-title') as HTMLElement).innerText;
@@ -47,10 +53,11 @@ const getElement = (stringSelector: string) => {
       return el;
     }
     throw new Error(
-      `document.querySelector(${stringSelector}) return null. Element does not exist.`,
+      `document.querySelector(${stringSelector}) returned null. Element does not exist.`,
     );
   } catch (error) {
     console.error(error);
+    return null;
   }
 };
 
@@ -63,9 +70,6 @@ const getShortTime = () =>
 // ========================= DEBUG ====================================
 // TODO: GET RID OF THIS EVENTUALLY
 
-const DEBUG_ICON_URL_1 = iconsList[0].url;
-const DEBUG_ICON_URL_2 = iconsList[2].url;
-
 export const filmInfo = {
   title: 'The Third Man',
   director: 'Carol Reed',
@@ -73,68 +77,66 @@ export const filmInfo = {
   country: 'United Kingdom',
 };
 
-export const fakeMessages = [
+export const getUser = (name: string, icon = iconsList[0]) => ({
+  id: null,
+  dateCreated: null,
+  name,
+  icon,
+});
+
+export const fakeMessages: IMessage[] = [
   {
-    userName: 'TheCynicalEdge',
-    profileImage: DEBUG_ICON_URL_1,
+    user: getUser('TheCynicalEdge', iconsList[0]),
     data: 'Created the session',
-    isMessage: false,
+    isUserMessage: false,
     timestamp: getShortTime(),
   },
   {
-    userName: 'TheCynicalEdge',
-    profileImage: DEBUG_ICON_URL_1,
+    user: getUser('TheCynicalEdge', iconsList[0]),
     data: 'Jumped to 8:14',
-    isMessage: false,
+    isUserMessage: false,
     timestamp: getShortTime(),
   },
   {
-    userName: 'TheCynicalEdge',
-    profileImage: DEBUG_ICON_URL_1,
+    user: getUser('TheCynicalEdge', iconsList[0]),
     data: 'Started playing the movie.',
-    isMessage: false,
+    isUserMessage: false,
     timestamp: getShortTime(),
   },
   {
-    userName: 'TheCynicalEdge',
-    profileImage: DEBUG_ICON_URL_1,
+    user: getUser('TheCynicalEdge', iconsList[0]),
     data: 'Paused the movie',
-    isMessage: false,
+    isUserMessage: false,
     timestamp: getShortTime(),
   },
   {
-    userName: 'Brigitte Lin',
-    profileImage: DEBUG_ICON_URL_2,
+    user: getUser('Brigitte Lin', iconsList[0]),
     data: 'Joined the party.',
-    isMessage: false,
+    isUserMessage: false,
     timestamp: getShortTime(),
   },
   {
-    userName: 'Brigitte Lin',
-    profileImage: DEBUG_ICON_URL_2,
+    user: getUser('Brigitte Lin', iconsList[3]),
     data: 'Started playing the movie.',
-    isMessage: false,
+    isUserMessage: false,
     timestamp: getShortTime(),
   },
   {
-    userName: 'Brigitte Lin',
-    profileImage: DEBUG_ICON_URL_2,
+    user: getUser('Brigitte Lin', iconsList[3]),
     data: "I've heard of this movie!",
-    isMessage: true,
+    isUserMessage: true,
     timestamp: getShortTime(),
   },
   {
-    userName: 'Brigitte Lin',
-    profileImage: DEBUG_ICON_URL_2,
+    user: getUser('Brigitte Lin', iconsList[3]),
     data: "It's a classic!",
-    isMessage: true,
+    isUserMessage: true,
     timestamp: getShortTime(),
   },
   {
-    userName: 'Brigitte Lin',
-    profileImage: DEBUG_ICON_URL_2,
+    user: getUser('Brigitte Lin', iconsList[3]),
     data: 'Orson Welles is in it too!',
-    isMessage: true,
+    isUserMessage: true,
     timestamp: getShortTime(),
   },
 ];
