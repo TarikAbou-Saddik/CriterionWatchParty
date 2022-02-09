@@ -10,7 +10,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.criterionchannel.com/",
+        "https://*.criterionchannel.com/*",
         "https://www.criterionchannel.com/*"
       ],
       "js": ["./static/js/content.js"],

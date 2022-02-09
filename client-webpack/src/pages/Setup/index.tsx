@@ -1,14 +1,10 @@
-import { useEffect, useState } from 'react';
 import { faCheckCircle, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../components/Input';
 import IconImage from '../../components/IconImage';
 import { copyToClipboard } from '../../utils';
 import { iconsList } from '../../utils/mediaUtils';
-import {
-  getActiveTabUrl,
-  sendMessageToContentScript,
-} from '../../utils/chromeUtils';
-import { User, UserIcon } from '../../types';
+import { sendMessageToContentScript } from '../../utils/chromeUtils';
+import { UserIcon } from '../../types';
 import {
   FontAwesomeIconWrapper,
   ProfileIconContainer,
@@ -16,54 +12,30 @@ import {
   SetupWrapper,
   StyledButtonLink,
 } from './styles';
-
-const initUser: User = {
-  id: null,
-  dateCreated: new Date(),
-  name: '',
-  icon: null,
-};
-
-const initIcon: UserIcon = { ...iconsList[0] };
+import useChromeStorage from '../../hooks/useChromeStorage';
 
 const Setup = () => {
-  const [currentUser, setCurrentUser] = useState<User>(initUser);
-  const [selectedUserIcon, setSelectedUserIcon] = useState<UserIcon>(initIcon);
-  const [partyUrl, setPartyUrl] = useState('');
+  const { state, dispatch } = useChromeStorage();
+  const { currentUser } = state;
 
-  useEffect(() => {
-    const setUrl = async () => {
-      const tabUrl = (await getActiveTabUrl()) as string;
-      // TODO: Remove this hard-coded example and add dynamic fetch of created id.
-      const partyId = '12345';
-      const partyUrl = partyId ? `${tabUrl}?criterionParty=${partyId}` : tabUrl;
-      setPartyUrl(partyUrl);
-    };
-    setUrl();
-  }, []);
-
-  const handleCurrentUserChange = (key: string, value: any) => {
-    setCurrentUser(prev => ({ ...prev, [key]: value }));
-  };
+  const handleUserNameChange = (name: string) =>
+    dispatch({ type: 'SET_CURRENT_USER_NAME', payload: name });
 
   const handleCreateParty = async () => {
     if (!currentUser.name.length) {
-      handleCurrentUserChange('name', selectedUserIcon.description);
+      const { description } = currentUser.icon as UserIcon;
+      handleUserNameChange(description);
     }
-    // const filmEmbedUrl = (
-    //   document.querySelector('#watch-embed') as HTMLIFrameElement
-    // ).src;
-    // chrome.tabs.update({ url: filmEmbedUrl });
-
+    let action = 'INSERT_CHAT';
+    if (!state.isChatActive) {
+      action = 'REDIRECT_TO_EMBED';
+      dispatch({ type: 'SET_CHAT_ACTIVE', payload: true });
+    } else {
+      window.close();
+    }
     await sendMessageToContentScript({
-      action: 'REDIRECT_TO_EMBED',
+      action,
     });
-    // await sendMessageToContentScript({
-    //   action: 'INSERT_CHAT',
-    // });
-    // TODO: Set currentPage in chrome.storage
-    // TODO: Redirect user to embed.criterionchannel.com
-    window.close();
   };
 
   return (
@@ -71,10 +43,15 @@ const Setup = () => {
       <h1>Choose your avatar.</h1>
       <ProfileIconContainer>
         {iconsList.map((icon, index) => (
-          <div key={`icon_${index}`} onClick={() => setSelectedUserIcon(icon)}>
+          <div
+            key={`icon_${index}`}
+            onClick={() =>
+              dispatch({ type: 'SET_CURRENT_USER_ICON', payload: icon })
+            }
+          >
             <IconImage size='md' src={icon.url} />
             <FontAwesomeIconWrapper
-              className={selectedUserIcon.id === icon.id ? 'active' : ''}
+              className={currentUser.icon?.id === icon.id ? 'active' : ''}
               icon={faCheckCircle}
             />
           </div>
@@ -85,11 +62,9 @@ const Setup = () => {
           id='nickname'
           name='nickname'
           value={currentUser.name}
-          onChange={({ target }) =>
-            handleCurrentUserChange('name', target.value)
-          }
+          onChange={({ target }) => handleUserNameChange(target.value)}
           label='Enter a nickname'
-          placeholder={selectedUserIcon.description}
+          placeholder={currentUser.icon?.description}
           icon={faCheckCircle}
           autoComplete='off'
         />
@@ -98,12 +73,12 @@ const Setup = () => {
           name='url'
           label='Share a link to your party!'
           icon={faClipboard}
-          onIconClick={() => copyToClipboard(partyUrl)}
+          onIconClick={() => copyToClipboard(state.partyUrl)}
           readOnly
-          value={partyUrl}
+          value={state.partyUrl}
         />
         <StyledButtonLink to='/setup' onClick={handleCreateParty}>
-          Start party
+          {state.isChatActive ? 'Open Chat' : 'Start Party'}
         </StyledButtonLink>
       </SetupFormWrapper>
     </SetupWrapper>

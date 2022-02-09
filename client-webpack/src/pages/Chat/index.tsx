@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import {
-  faPaperPlane,
-  faChevronCircleRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import Audience from '../../components/Audience';
+import Header from '../../components/Header';
 import Message from '../../components/Message';
+import { Film } from '../../types';
+import useChromeStorage from '../../hooks/useChromeStorage';
 import {
-  getFilm,
   createMessage,
   getPlayButton,
+  getProgressBar,
   getStateOfFilm,
-  fakeMessages,
-  getUser,
+  getVideoEl,
 } from './utils';
+import { staticCriterionLogo } from '../../utils/mediaUtils';
 import {
   ChatContainer,
   ChatHeaderTitleWrapper,
@@ -22,58 +23,73 @@ import {
   ChatInputSendButtonIcon,
   ChatMessagesWrapper,
   ChatWrapper,
-  ChatHideButton,
-  ChatHideButtonChevron,
 } from './styles';
-import { Film, IMessage, User } from '../../types';
-import Audience from '../../components/Audience';
-import Header from '../../components/Header';
-import { staticCriterionLogo } from '../../utils/mediaUtils';
 
-const Chat = () => {
+interface ChatProps {
+  film: Film;
+}
+
+const Chat = ({ film }: ChatProps) => {
   const [messageToSend, setMessageToSend] = useState('');
-  const [messages, setMessages] = useState<IMessage[]>(fakeMessages);
-  const [film, setFilm] = useState<Film>(getFilm());
-  // TODO: This should come from chrome.storage.local.get()
-  const [user, setUser] = useState<User>(getUser('TheCynicalEdge'));
   const [hideChat, setHideChat] = useState(false);
+  const { state, dispatch } = useChromeStorage();
 
   useEffect(() => {
-    const handleClick = ({ target }: { target: EventTarget | null }) => {
-      const clickedEl = target as Element;
-      if (clickedEl.matches('button.play')) {
-        const message = `${user.name} has clicked play!`;
-        setMessages(prev => [...prev, createMessage(user, message, false)]);
-      }
+    const handleVideoInteraction = (action: string) => {
+      dispatch({
+        type: 'ADD_MESSAGE',
+        payload: createMessage(
+          state.currentUser,
+          getStateOfFilm(action),
+          false,
+        ),
+      });
     };
-    // Grab the iFrame
-    // const iFrame = document.getElementById('watch-embed') as HTMLIFrameElement;
-    // const playBtn =
-    //   iFrame.contentWindow?.document.querySelector('button.play') ||
-    //   iFrame.contentDocument?.querySelector('button.play');
-  }, []);
+    const handlePlayPause = () => handleVideoInteraction('PLAY_PAUSE');
+    const handleSkip = () => handleVideoInteraction('SKIP');
+
+    const playBtn = getPlayButton();
+    const progressBar = getProgressBar();
+    const videoEl = getVideoEl();
+    videoEl.addEventListener('click', handlePlayPause);
+    playBtn.addEventListener('click', handlePlayPause);
+    progressBar.addEventListener('click', handleSkip);
+
+    return () => {
+      videoEl.removeEventListener('click', handlePlayPause);
+      playBtn.removeEventListener('click', handlePlayPause);
+      progressBar.removeEventListener('click', handleSkip);
+    };
+  }, [state.currentUser.name]);
 
   useEffect(() => {
-    if (messages.length) {
+    if (state.messages.length) {
       scrollChatToBottom();
     }
-  }, [messages]);
+  }, [state.messages.length]);
 
   const handleMessageAdd = () => {
     if (messageToSend.length) {
-      setMessages(prev => [...prev, createMessage(user, messageToSend)]);
+      dispatch({
+        type: 'ADD_MESSAGE',
+        payload: createMessage(state.currentUser, messageToSend),
+      });
       setMessageToSend('');
       scrollChatToBottom();
     }
   };
 
   const scrollChatToBottom = () => {
-    const scrollEl = document.querySelector('.chat-scroll') as HTMLElement;
-    const lastMessage = scrollEl.lastElementChild as HTMLElement;
-    scrollEl.scrollTo({
-      top: scrollEl.scrollHeight + lastMessage.scrollHeight,
-      behavior: 'smooth',
-    });
+    const scrollEl = document.querySelector('.chat-scroll');
+    if (scrollEl) {
+      const lastMessage = scrollEl.lastElementChild;
+      if (lastMessage) {
+        scrollEl.scrollTo({
+          top: scrollEl.scrollHeight + lastMessage.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }
   };
 
   const handleEnterKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -88,13 +104,10 @@ const Chat = () => {
 
   return (
     <ChatWrapper hidden={hideChat}>
-      {/* <ChatHideButton onClick={() => setHideChat(prev => !prev)}>
-        <ChatHideButtonChevron icon={faChevronCircleRight} />
-      </ChatHideButton> */}
       <Header
         displayLink={false}
         displayUserIcon={true}
-        userIconUrl={user.icon?.url as string}
+        userIconUrl={state.currentUser.icon?.url as string}
         logoUrl={staticCriterionLogo}
       />
       <ChatContainer>
@@ -106,7 +119,7 @@ const Chat = () => {
           </ChatHeaderTitleWrapper>
         </ChatHeaderWrapper>
         <ChatMessagesWrapper className='chat-scroll'>
-          {messages.map((message, index) => (
+          {state.messages.map((message, index) => (
             <Message key={`message_${index}`} {...message} />
           ))}
         </ChatMessagesWrapper>

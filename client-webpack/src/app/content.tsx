@@ -3,18 +3,18 @@ import { ThemeProvider } from 'styled-components';
 import Chat from '../pages/Chat';
 import { ChatStyles } from '../styles/Global';
 import { theme } from '../styles/Theme';
+import { Film } from '../types';
 
 const actions = {
   INSERT_CHAT: 'INSERT_CHAT',
   REDIRECT_TO_EMBED: 'REDIRECT_TO_EMBED',
 };
 
-// TODO: Fix port error due to mishandling this async call.
 chrome.runtime.onMessage.addListener(
   (
     request: any,
     sender: chrome.runtime.MessageSender,
-    responseHandler: (response?: any) => void,
+    sendResponse: (response?: any) => void,
   ) => {
     switch (request.action) {
       case actions.INSERT_CHAT:
@@ -26,30 +26,59 @@ chrome.runtime.onMessage.addListener(
       default:
         createChatContainer();
     }
+    sendResponse();
+    return true;
   },
 );
 
 const redirectToVideoEmbed = () => {
   const iFrame = document.getElementById('watch-embed') as HTMLIFrameElement;
-  window.location.href = iFrame.src;
+  const film = getFilm();
+  chrome.storage.local
+    .set({ filmState: film })
+    .then(() => chrome.runtime.sendMessage({ redirect: iFrame.src }));
 };
 
 const createChatContainer = () => {
   const divMount = createDivElementWithId('criterion-chat-container');
-  // setStylesForMountNode(divMount, chatStyles);
   document.body.appendChild(divMount);
-  render(
-    <ThemeProvider theme={theme}>
-      <ChatStyles />
-      <Chat />
-    </ThemeProvider>,
-    divMount,
-  );
+  createLinkElementsForFont();
+  chrome.storage.local.get(['filmState'], ({ filmState }) => {
+    render(
+      <ThemeProvider theme={theme}>
+        <ChatStyles />
+        <Chat film={filmState} />
+      </ThemeProvider>,
+      divMount,
+    );
+  });
 };
 
-const setStylesForMountNode = (mountNode: any, styles: any) => {
-  for (const [property, value] of Object.entries(styles)) {
-    mountNode.style[property] = value;
+const getFilm = (): Film => ({
+  title: getFilmTitle(),
+  // timestamp: getFilmTimestamp(),
+  timestamp: '',
+  info: getFilmInfo(),
+});
+
+const getFilmTitle = () =>
+  (getElement('h1.video-title') as HTMLElement).innerText;
+
+const getFilmInfo = () =>
+  (getElement('.read-more-wrap > p') as HTMLElement).innerText.split('\n')[0];
+
+const getElement = (stringSelector: string) => {
+  try {
+    const el = document.querySelector(stringSelector);
+    if (el) {
+      return el;
+    }
+    throw new Error(
+      `document.querySelector(${stringSelector}) returned null. Element does not exist.`,
+    );
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };
 
@@ -57,4 +86,23 @@ const createDivElementWithId = (id: string) => {
   const el = document.createElement('div');
   el.setAttribute('id', id);
   return el;
+};
+
+const createLinkElementsForFont = () => {
+  const head = document.head || document.getElementsByTagName('head')[0];
+  const hrefs = [
+    'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com',
+    'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap',
+  ];
+  head.appendChild(createLinkElement(hrefs[0], 'preconnect'));
+  head.appendChild(createLinkElement(hrefs[1], 'preconnect'));
+  head.appendChild(createLinkElement(hrefs[2], 'stylesheet'));
+};
+
+const createLinkElement = (href: string, rel: string) => {
+  const link = document.createElement('link');
+  link.href = href;
+  link.rel = rel;
+  return link;
 };

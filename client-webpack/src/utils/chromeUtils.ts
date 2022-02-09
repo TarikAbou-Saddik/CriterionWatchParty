@@ -1,10 +1,3 @@
-export const redirectToCriterionChannel = (): void => {
-  if (chrome) {
-    const criterionChannelUrl = 'https://www.criterionchannel.com/';
-    chrome.tabs.create({ active: true, url: criterionChannelUrl });
-  }
-};
-
 export const getActiveTabUrl = async (): Promise<string | undefined> => {
   let url = '';
   if (chrome) {

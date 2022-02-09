@@ -30,9 +30,11 @@ export interface PartyState {
   restrictPartyControl: boolean;
   partyUrl: string;
   dateCreated: string | null;
+  currentUser: User;
   users: User[];
   messages: IMessage[];
   showAudience: boolean;
   isChatActive: boolean;
   isPartyCreated: boolean;
+  activeTabUrl?: string;
 }

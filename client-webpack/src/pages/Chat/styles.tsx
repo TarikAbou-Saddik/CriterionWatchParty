@@ -59,7 +59,7 @@ export const ChatHeaderTitleWrapper = styled.div`
 
   & h1 {
     color: ${({ theme }) => theme.textPrimary};
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.8rem;
   }
 

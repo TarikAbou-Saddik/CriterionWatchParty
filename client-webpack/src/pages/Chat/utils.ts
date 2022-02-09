@@ -1,16 +1,31 @@
-import { User, IMessage, Film, UserIcon } from '../../types';
+import { User, IMessage, Film } from '../../types';
 import { iconsListStatic as iconsList } from '../../utils/mediaUtils';
 
 export const getPlayButton = () => getElement('button.play') as HTMLElement;
 export const playPause = () => getPlayButton().click();
 
-export const getStateOfFilm = () =>
-  isPlaying() ? 'Started playing the movie.' : 'Paused the movie';
+export const getProgressBar = () =>
+  getElement('div.vp-progress') as HTMLElement;
+
+export const getVideoEl = () => getElement('video') as HTMLVideoElement;
+
+export const getStateOfFilm = (state: string) => {
+  const timestamp = getFilmTimestamp();
+  switch (state) {
+    case 'SKIP':
+      return `Skipped the movie to ${timestamp}`;
+    case 'PLAY_PAUSE':
+      return isPlaying()
+        ? `Resumed playing the movie`
+        : `Paused the movie at ${timestamp}`;
+    default:
+      return '';
+  }
+};
 
 export const getFilm = (): Film => ({
   title: getFilmTitle(),
-  // timestamp: getFilmTimestamp(),
-  timestamp: '',
+  timestamp: getFilmTimestamp(),
   info: getFilmInfo(),
 });
 
@@ -41,9 +56,9 @@ const getFilmInfo = () =>
   (getElement('.read-more-wrap > p') as HTMLElement).innerText.split('\n')[0];
 
 const isPlaying = () => {
-  const STATE_PLAYING = 'state-playing';
+  const STATE_PAUSED = 'state-paused';
   const { classList } = getPlayButton();
-  return classList.contains(STATE_PLAYING);
+  return classList.contains(STATE_PAUSED);
 };
 
 const getElement = (stringSelector: string) => {
@@ -66,16 +81,6 @@ const getShortTime = () =>
     hour: '2-digit',
     minute: '2-digit',
   });
-
-// ========================= DEBUG ====================================
-// TODO: GET RID OF THIS EVENTUALLY
-
-export const filmInfo = {
-  title: 'The Third Man',
-  director: 'Carol Reed',
-  year: 1949,
-  country: 'United Kingdom',
-};
 
 export const getUser = (name: string, icon = iconsList[0]) => ({
   id: null,
