@@ -25,18 +25,16 @@ const ButtonLink = ({
   to = '/',
   onClick,
   variant = 'light',
-}: ButtonLinkProps) => {
-  return (
-    <StyledButton
-      className={className}
-      to={to}
-      onClick={onClick}
-      variant={variant}
-    >
-      {children}
-    </StyledButton>
-  );
-};
+}: ButtonLinkProps) => (
+  <StyledButton
+    className={className}
+    to={to}
+    onClick={onClick}
+    variant={variant}
+  >
+    {children}
+  </StyledButton>
+);
 
 const StyledButton = styled(Link)<BaseButtonProps>`
   display: flex;

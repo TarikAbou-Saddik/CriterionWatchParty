@@ -19,17 +19,15 @@ const Input = ({
   id,
   onIconClick,
   ...inputProps
-}: InputProps & React.InputHTMLAttributes<HTMLInputElement>) => {
-  return (
-    <InputWrapper>
-      <StyledLabel htmlFor={id}>{label}</StyledLabel>
-      <StyledInput>
-        <input className={className} id={id} value={value} {...inputProps} />
-        {icon && <StyledFontAwesoneIcon onClick={onIconClick} icon={icon} />}
-      </StyledInput>
-    </InputWrapper>
-  );
-};
+}: InputProps & React.InputHTMLAttributes<HTMLInputElement>) => (
+  <InputWrapper>
+    <StyledLabel htmlFor={id}>{label}</StyledLabel>
+    <StyledInput>
+      <input className={className} id={id} value={value} {...inputProps} />
+      {icon && <StyledFontAwesoneIcon onClick={onIconClick} icon={icon} />}
+    </StyledInput>
+  </InputWrapper>
+);
 
 const InputWrapper = styled.div`
   display: flex;

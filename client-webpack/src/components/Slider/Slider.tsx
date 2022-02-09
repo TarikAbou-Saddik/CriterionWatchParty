@@ -8,13 +8,11 @@ interface SliderProps extends BaseSliderProps {
   onClick?: () => void;
 }
 
-const Slider = ({ onClick, active }: SliderProps) => {
-  return (
-    <SliderWrapper active={active}>
-      <SliderBall onClick={onClick} />
-    </SliderWrapper>
-  );
-};
+const Slider = ({ onClick, active }: SliderProps) => (
+  <SliderWrapper active={active}>
+    <SliderBall onClick={onClick} />
+  </SliderWrapper>
+);
 
 const slideBallSize = '25px';
 

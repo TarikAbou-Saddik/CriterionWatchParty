@@ -31,7 +31,6 @@ wss.on('connection', ws => {
       ws.send(buildCreatePartyResponse(partyId, ws.id));
     }
     if (data.type === PartyMethods.RESTRICT_CONTROL) {
-      console.log(data);
       handlePartyRestriction(data.payload);
     }
   });

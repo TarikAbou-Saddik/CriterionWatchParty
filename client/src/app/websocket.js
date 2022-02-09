@@ -24,7 +24,6 @@ const SocketProvider = ({ children }) => {
         const { type, payload } = JSON.parse(data);
         switch (type) {
           case PartyMethods.CREATE_PARTY:
-            console.log(payload);
             dispatch(setPartyId(payload.id));
             break;
           default:

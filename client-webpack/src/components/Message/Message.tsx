@@ -2,20 +2,18 @@ import styled from 'styled-components';
 import IconImage from '../IconImage';
 import { IMessage } from '../../types';
 
-const Message = ({ user, isUserMessage, data, timestamp }: IMessage) => {
-  return (
-    <MessageWrapper>
-      <IconImage src={user.icon?.url || ''} size='sm' disabled />
-      <MessageDataWrapper>
-        <MessageUserNameWrapper>
-          <h5>{user.name}</h5>
-          <span>{timestamp}</span>
-        </MessageUserNameWrapper>
-        <MessageText isMessage={isUserMessage}>{data}</MessageText>
-      </MessageDataWrapper>
-    </MessageWrapper>
-  );
-};
+const Message = ({ user, isUserMessage, data, timestamp }: IMessage) => (
+  <MessageWrapper>
+    <IconImage src={user.icon?.url || ''} size='sm' disabled />
+    <MessageDataWrapper>
+      <MessageUserNameWrapper>
+        <h5>{user.name}</h5>
+        <span>{timestamp}</span>
+      </MessageUserNameWrapper>
+      <MessageText isMessage={isUserMessage}>{data}</MessageText>
+    </MessageDataWrapper>
+  </MessageWrapper>
+);
 
 const MessageWrapper = styled.div`
   display: flex;

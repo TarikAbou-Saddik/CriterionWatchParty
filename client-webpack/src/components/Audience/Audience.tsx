@@ -2,23 +2,21 @@ import styled from 'styled-components';
 import IconImage from '../IconImage';
 import { iconsListStaticUrls as iconsListUrls } from '../../utils/mediaUtils';
 
-const Audience = () => {
-  return (
-    <AudienceWrapper>
-      <IconListContainer>
-        {iconsListUrls.slice(0, 3).map((icon, index) => (
-          <IconImage
-            key={`audience_icon_${index}`}
-            src={icon}
-            size='sm'
-            disabled
-          />
-        ))}
-      </IconListContainer>
-      <span>Audience</span>
-    </AudienceWrapper>
-  );
-};
+const Audience = () => (
+  <AudienceWrapper>
+    <IconListContainer>
+      {iconsListUrls.slice(0, 3).map((icon, index) => (
+        <IconImage
+          key={`audience_icon_${index}`}
+          src={icon}
+          size='sm'
+          disabled
+        />
+      ))}
+    </IconListContainer>
+    <span>Audience</span>
+  </AudienceWrapper>
+);
 
 const AudienceWrapper = styled.footer`
   margin: 5vh auto;

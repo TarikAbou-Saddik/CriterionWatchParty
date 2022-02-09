@@ -22,9 +22,4 @@ const getTabById = async (tabId: number) => {
   return await chrome.tabs.get(tabId);
 };
 
-const getActiveTab = async (): Promise<chrome.tabs.Tab[]> => {
-  let queryOptions = { active: true, currentWindow: true };
-  return await chrome.tabs.query(queryOptions);
-};
-
 export {};
