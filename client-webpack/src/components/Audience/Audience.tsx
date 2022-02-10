@@ -1,14 +1,17 @@
 import styled from 'styled-components';
-import IconImage from '../IconImage';
-import { iconsListStaticUrls as iconsListUrls } from '../../utils/mediaUtils';
+import IconImage from 'Components/IconImage';
 
-const Audience = () => (
+interface AudienceProps {
+  memberIconsUrls: string[];
+}
+
+const Audience = ({ memberIconsUrls }: AudienceProps) => (
   <AudienceWrapper>
     <IconListContainer>
-      {iconsListUrls.slice(0, 3).map((icon, index) => (
+      {memberIconsUrls.map((iconUrl, index) => (
         <IconImage
           key={`audience_icon_${index}`}
-          src={icon}
+          src={iconUrl}
           size='sm'
           disabled
         />

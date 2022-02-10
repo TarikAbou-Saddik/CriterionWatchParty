@@ -17,7 +17,16 @@
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "strict": true,
-      "types": ["chrome"]
+      "types": ["chrome"],
+      "baseUrl": "src",
+      "paths": {
+        "Components/*": ["./components/*"],
+        "Hooks/*": ["./hooks/*"],
+        "Types/*": ["./types/index.ts"],
+        "Pages/*": ["./pages/*"],
+        "Utils/*": ["./utils/*"],
+        "Assets/*": ["./assets/*"],
+      }
   },
   "include": ["./src", "./src/custom.d.ts"]
 }

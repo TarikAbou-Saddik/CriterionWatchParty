@@ -2,9 +2,9 @@ import { faCheckCircle, faClipboard } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../components/Input';
 import IconImage from '../../components/IconImage';
 import { copyToClipboard } from '../../utils';
-import { iconsList } from '../../utils/mediaUtils';
-import { sendMessageToContentScript } from '../../utils/chromeUtils';
-import { UserIcon } from '../../types';
+import { iconsList } from 'Utils/mediaUtils';
+import { sendMessageToContentScript } from 'Utils/chromeUtils';
+import { UserIcon } from 'Types/';
 import {
   FontAwesomeIconWrapper,
   ProfileIconContainer,

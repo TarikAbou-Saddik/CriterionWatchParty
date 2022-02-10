@@ -1,9 +1,9 @@
 import { render } from 'react-dom';
 import { ThemeProvider } from 'styled-components';
-import Chat from '../pages/Chat';
+import Chat from 'Pages/Chat';
 import { ChatStyles } from '../styles/Global';
 import { theme } from '../styles/Theme';
-import { Film } from '../types';
+import { Film } from 'Types/';
 
 const actions = {
   INSERT_CHAT: 'INSERT_CHAT',

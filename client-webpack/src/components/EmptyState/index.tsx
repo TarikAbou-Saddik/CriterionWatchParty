@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import ButtonLink from '../ButtonLink';
-import { getActiveTab } from '../../utils/chromeUtils';
+import ButtonLink from 'Components/ButtonLink';
+import { getActiveTab } from 'Utils/chromeUtils';
 
 interface EmptyStateProps {
   url?: string;

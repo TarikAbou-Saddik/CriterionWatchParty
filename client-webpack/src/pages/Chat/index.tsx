@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import Audience from '../../components/Audience';
-import Header from '../../components/Header';
-import Message from '../../components/Message';
-import { Film } from '../../types';
-import useChromeStorage from '../../hooks/useChromeStorage';
+import Header from 'Components/Header';
+import Message from 'Components/Message';
+import Audience from 'Components/Audience';
+import useChromeStorage from 'Hooks/useChromeStorage';
+import { Film } from 'Types/';
 import {
   createMessage,
   getPlayButton,
@@ -33,6 +33,8 @@ const Chat = ({ film }: ChatProps) => {
   const [messageToSend, setMessageToSend] = useState('');
   const [hideChat, setHideChat] = useState(false);
   const { state, dispatch } = useChromeStorage();
+
+  console.log(state);
 
   useEffect(() => {
     const handleVideoInteraction = (action: string) => {
@@ -102,6 +104,10 @@ const Chat = ({ film }: ChatProps) => {
     }
   };
 
+  const memberIconUrls = useMemo(() => {
+    return state.users.map(user => user.icon?.url as string);
+  }, [state.users.length]);
+
   return (
     <ChatWrapper hidden={hideChat}>
       <Header
@@ -137,7 +143,7 @@ const Chat = ({ film }: ChatProps) => {
           </ChatInputSendButton>
         </ChatInputWrapper>
       </ChatContainer>
-      <Audience />
+      <Audience memberIconsUrls={memberIconUrls} />
     </ChatWrapper>
   );
 };

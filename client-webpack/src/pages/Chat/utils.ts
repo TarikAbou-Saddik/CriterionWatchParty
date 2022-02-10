@@ -1,5 +1,5 @@
-import { User, IMessage, Film } from '../../types';
-import { iconsListStatic as iconsList } from '../../utils/mediaUtils';
+import { User, IMessage, Film } from 'Types/';
+import { iconsListStatic as iconsList } from 'Utils/mediaUtils';
 
 export const getPlayButton = () => getElement('button.play') as HTMLElement;
 export const playPause = () => getPlayButton().click();
@@ -7,7 +7,7 @@ export const playPause = () => getPlayButton().click();
 export const getProgressBar = () =>
   getElement('div.vp-progress') as HTMLElement;
 
-export const getVideoEl = () => getElement('video') as HTMLVideoElement;
+export const getVideoEl = () => getElement('div.vp-target') as HTMLVideoElement;
 
 export const getStateOfFilm = (state: string) => {
   const timestamp = getFilmTimestamp();

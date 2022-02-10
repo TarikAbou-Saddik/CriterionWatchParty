@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
-import Container from '../components/Container';
-import Header from '../components/Header';
-import EmptyState from '../components/EmptyState';
-import Popup from '../pages/Popup';
-import Setup from '../pages/Setup';
-import { iconsListUrls } from '../utils/mediaUtils';
-import CriterionLogo from '../assets/CriterionLogo.svg';
-import useChromeStorage from '../hooks/useChromeStorage';
-
-const userIconUrl = iconsListUrls[0];
+import Container from 'Components/Container';
+import Header from 'Components/Header';
+import EmptyState from 'Components/EmptyState';
+import Popup from 'Pages/Popup';
+import Setup from 'Pages/Setup';
+import CriterionLogo from 'Assets/CriterionLogo.svg';
+import useChromeStorage from 'Hooks/useChromeStorage';
 
 const App = () => {
   const [displayExtension, setDisplayExtension] = useState(false);
@@ -41,7 +38,7 @@ const App = () => {
           <Header
             displayLink={state.isChatActive}
             displayUserIcon={state.isPartyCreated}
-            userIconUrl={userIconUrl}
+            userIconUrl={state.currentUser.icon?.url as string}
             logoUrl={CriterionLogo}
           />
           {state.isPartyCreated ? (

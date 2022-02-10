@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import Logo from '../Logo';
-import IconImage from '../IconImage';
+import Logo from 'Components/Logo';
+import IconImage from 'Components/IconImage';
 
 interface HeaderProps {
   displayLink: boolean;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import IconImage from '../IconImage';
-import { IMessage } from '../../types';
+import IconImage from 'Components/IconImage';
+import { IMessage } from 'Types/';
 
 const Message = ({ user, isUserMessage, data, timestamp }: IMessage) => (
   <MessageWrapper>

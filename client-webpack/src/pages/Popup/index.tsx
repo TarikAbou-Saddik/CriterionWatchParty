@@ -1,5 +1,5 @@
-import Slider from '../../components/Slider';
-import ButtonLink from '../../components/ButtonLink';
+import Slider from 'Components/Slider';
+import ButtonLink from 'Components/ButtonLink';
 import {
   HomeWrapper,
   HeroControlContainer,

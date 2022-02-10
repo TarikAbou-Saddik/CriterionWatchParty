@@ -24,7 +24,7 @@ const initialState: PartyState = {
   partyUrl: '',
   dateCreated: '',
   currentUser: defaultUser,
-  users: [],
+  users: [defaultUser],
   messages: [],
   activeTabUrl: '',
 };
