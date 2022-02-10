@@ -61,25 +61,21 @@ const getFilm = (): Film => ({
   info: getFilmInfo(),
 });
 
-const getFilmTitle = () =>
-  (getElement('h1.video-title') as HTMLElement).innerText;
-
-const getFilmInfo = () =>
-  (getElement('.read-more-wrap > p') as HTMLElement).innerText.split('\n')[0];
-
-const getElement = (stringSelector: string) => {
-  try {
-    const el = document.querySelector(stringSelector);
-    if (el) {
-      return el;
-    }
-    throw new Error(
-      `document.querySelector(${stringSelector}) returned null. Element does not exist.`,
-    );
-  } catch (error) {
-    console.error(error);
-    return null;
+const getFilmTitle = () => {
+  const filmTitle = document.querySelector('h1.video-title') as HTMLElement;
+  if (filmTitle) {
+    return filmTitle.innerText;
   }
+  return '';
+};
+
+const getFilmInfo = () => {
+  const filmInfo = (document.querySelector('.read-more-wrap > p') ||
+    document.querySelector('#watch-info p')) as HTMLElement;
+  if (filmInfo) {
+    return filmInfo.innerText.split('\n')[0];
+  }
+  return '';
 };
 
 const createDivElementWithId = (id: string) => {

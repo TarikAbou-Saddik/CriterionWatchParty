@@ -23,6 +23,7 @@ import {
   ChatInputSendButtonIcon,
   ChatMessagesWrapper,
   ChatWrapper,
+  ChatHeaderFilmInfo,
 } from './styles';
 
 interface ChatProps {
@@ -33,18 +34,13 @@ const Chat = ({ film }: ChatProps) => {
   const [messageToSend, setMessageToSend] = useState('');
   const [hideChat, setHideChat] = useState(false);
   const { state, dispatch } = useChromeStorage();
-
-  console.log(state);
+  const currentUser = state.users[0];
 
   useEffect(() => {
     const handleVideoInteraction = (action: string) => {
       dispatch({
         type: 'ADD_MESSAGE',
-        payload: createMessage(
-          state.currentUser,
-          getStateOfFilm(action),
-          false,
-        ),
+        payload: createMessage(currentUser, getStateOfFilm(action), false),
       });
     };
     const handlePlayPause = () => handleVideoInteraction('PLAY_PAUSE');
@@ -62,7 +58,7 @@ const Chat = ({ film }: ChatProps) => {
       playBtn.removeEventListener('click', handlePlayPause);
       progressBar.removeEventListener('click', handleSkip);
     };
-  }, [state.currentUser.name]);
+  }, [currentUser.name]);
 
   useEffect(() => {
     if (state.messages.length) {
@@ -74,7 +70,7 @@ const Chat = ({ film }: ChatProps) => {
     if (messageToSend.length) {
       dispatch({
         type: 'ADD_MESSAGE',
-        payload: createMessage(state.currentUser, messageToSend),
+        payload: createMessage(currentUser, messageToSend),
       });
       setMessageToSend('');
       scrollChatToBottom();
@@ -97,23 +93,20 @@ const Chat = ({ film }: ChatProps) => {
   const handleEnterKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      const sendButton = document.querySelector(
-        '#chat-input-send',
-      ) as HTMLElement;
-      sendButton.click();
+      handleMessageAdd();
     }
   };
 
   const memberIconUrls = useMemo(() => {
     return state.users.map(user => user.icon?.url as string);
-  }, [state.users.length]);
+  }, [state.users]);
 
   return (
     <ChatWrapper hidden={hideChat}>
       <Header
         displayLink={false}
         displayUserIcon={true}
-        userIconUrl={state.currentUser.icon?.url as string}
+        userIconUrl={currentUser.icon?.url as string}
         logoUrl={staticCriterionLogo}
       />
       <ChatContainer>
@@ -121,7 +114,9 @@ const Chat = ({ film }: ChatProps) => {
           <p>You're currently watching...</p>
           <ChatHeaderTitleWrapper>
             <h1>{film?.title}</h1>
-            <p>{film?.info}</p>
+            <ChatHeaderFilmInfo shortenSize={film?.info.length > 90}>
+              {film?.info}
+            </ChatHeaderFilmInfo>
           </ChatHeaderTitleWrapper>
         </ChatHeaderWrapper>
         <ChatMessagesWrapper className='chat-scroll'>

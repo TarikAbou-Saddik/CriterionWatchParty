@@ -1,7 +1,11 @@
 import { useReducer, useEffect, useCallback } from 'react';
-import { PartyState, User } from '../../types';
-import { getActiveTab } from '../../utils/chromeUtils';
-import { iconsListStatic as iconsList } from '../../utils/mediaUtils';
+import { v4 as uuid } from 'uuid';
+import { PartyState, User, IMessage } from 'Types/';
+import { getActiveTab } from 'Utils/chromeUtils';
+import {
+  iconsListStatic as iconsList,
+  staticCriterionLogo,
+} from 'Utils/mediaUtils';
 import {
   Action,
   ChromeStateResponse,
@@ -9,24 +13,50 @@ import {
 } from './types';
 
 const defaultUser: User = {
-  id: null,
+  id: uuid(),
   dateCreated: new Date(),
   name: '',
   icon: iconsList[0],
 };
 
+const welcomeMessage: IMessage = {
+  user: {
+    id: uuid(),
+    dateCreated: new Date(),
+    name: 'Criterion Bot',
+    icon: {
+      url: staticCriterionLogo,
+      description: 'Criterion Logo',
+    },
+  },
+  data: 'Welcome to the Criterion Channel Watch Party!',
+  timestamp: '',
+  isUserMessage: false,
+};
+
 const initialState: PartyState = {
-  id: null,
+  id: uuid(),
   restrictPartyControl: false,
   showAudience: false,
   isChatActive: false,
   isPartyCreated: false,
   partyUrl: '',
   dateCreated: '',
-  currentUser: defaultUser,
   users: [defaultUser],
-  messages: [],
+  messages: [welcomeMessage],
   activeTabUrl: '',
+};
+
+const getUpdatedUsers = (
+  changedProp: string,
+  payload: any,
+  state: PartyState,
+): User[] => {
+  const currentUser = state.users[0];
+  return [
+    { ...state.users[0], [changedProp]: payload },
+    ...state.users.filter(x => x.id !== currentUser.id),
+  ];
 };
 
 const reducer = (state: PartyState, action: Action): PartyState => {
@@ -57,14 +87,15 @@ const reducer = (state: PartyState, action: Action): PartyState => {
     case 'SET_CURRENT_USER_NAME':
       return {
         ...state,
-        currentUser: { ...state.currentUser, name: payload },
+        users: getUpdatedUsers('name', payload, state),
       };
     case 'SET_CURRENT_USER_ICON':
       return {
         ...state,
-        currentUser: { ...state.currentUser, icon: payload },
+        users: getUpdatedUsers('icon', payload, state),
       };
     case 'ADD_MESSAGE':
+      console.log(payload);
       return {
         ...state,
         messages: [...state.messages, payload],

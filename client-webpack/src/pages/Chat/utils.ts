@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { User, IMessage, Film } from 'Types/';
 import { iconsListStatic as iconsList } from 'Utils/mediaUtils';
 
@@ -34,7 +35,7 @@ export const createMessage = (
   data: string,
   isUserMessage = true,
 ): IMessage => ({
-  id: null,
+  id: uuid(),
   user,
   data,
   isUserMessage,

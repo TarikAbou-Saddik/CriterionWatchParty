@@ -38,7 +38,7 @@ const App = () => {
           <Header
             displayLink={state.isChatActive}
             displayUserIcon={state.isPartyCreated}
-            userIconUrl={state.currentUser.icon?.url as string}
+            userIconUrl={state.users[0].icon?.url as string}
             logoUrl={CriterionLogo}
           />
           {state.isPartyCreated ? (

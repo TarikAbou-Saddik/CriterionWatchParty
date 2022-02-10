@@ -1,18 +1,21 @@
+export type Id = number | string | null;
+
 export interface UserIcon {
-  id?: number | null;
+  id?: Id;
   url: string;
   description: string;
 }
 
 export interface User {
-  id?: number | null;
+  [index: string]: Date | string | UserIcon | Id | null | undefined;
+  id?: Id;
   dateCreated?: Date | null;
   name: string;
   icon?: UserIcon | null;
 }
 
 export interface IMessage {
-  id?: number | null;
+  id?: Id;
   user: User;
   data: string;
   timestamp: string;
@@ -26,11 +29,10 @@ export interface Film {
 }
 
 export interface PartyState {
-  id: number | null;
+  id?: Id;
   restrictPartyControl: boolean;
   partyUrl: string;
   dateCreated: string | null;
-  currentUser: User;
   users: User[];
   messages: IMessage[];
   showAudience: boolean;

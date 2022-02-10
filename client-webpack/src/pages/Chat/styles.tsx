@@ -62,10 +62,13 @@ export const ChatHeaderTitleWrapper = styled.div`
     font-weight: 700;
     font-size: 1.8rem;
   }
+`;
 
-  & p {
-    font-size: 0.9rem;
-  }
+type ChatHeaderFilmInfoProps = {
+  shortenSize?: boolean;
+};
+export const ChatHeaderFilmInfo = styled.p<ChatHeaderFilmInfoProps>`
+  font-size: ${({ shortenSize }) => (shortenSize ? '0.7rem' : '0.9rem')};
 `;
 
 export const ChatMessagesWrapper = styled.div`

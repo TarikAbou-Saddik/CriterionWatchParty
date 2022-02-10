@@ -1,10 +1,10 @@
 import { faCheckCircle, faClipboard } from '@fortawesome/free-solid-svg-icons';
-import Input from '../../components/Input';
-import IconImage from '../../components/IconImage';
+import Input from 'Components/Input';
+import IconImage from 'Components/IconImage';
 import { copyToClipboard } from '../../utils';
-import { iconsList } from 'Utils/mediaUtils';
+import { iconsList, iconsListStatic } from 'Utils/mediaUtils';
 import { sendMessageToContentScript } from 'Utils/chromeUtils';
-import { UserIcon } from 'Types/';
+import { UserIcon, Id } from 'Types/';
 import {
   FontAwesomeIconWrapper,
   ProfileIconContainer,
@@ -12,11 +12,11 @@ import {
   SetupWrapper,
   StyledButtonLink,
 } from './styles';
-import useChromeStorage from '../../hooks/useChromeStorage';
+import useChromeStorage from 'Hooks/useChromeStorage';
 
 const Setup = () => {
   const { state, dispatch } = useChromeStorage();
-  const { currentUser } = state;
+  const currentUser = state.users[0];
 
   const handleUserNameChange = (name: string) =>
     dispatch({ type: 'SET_CURRENT_USER_NAME', payload: name });
@@ -38,17 +38,17 @@ const Setup = () => {
     });
   };
 
+  const handleIconChange = (id: Id | undefined) => {
+    const staticIcon = iconsListStatic.find(icon => icon.id === (id as Id));
+    dispatch({ type: 'SET_CURRENT_USER_ICON', payload: staticIcon });
+  };
+
   return (
     <SetupWrapper>
       <h1>Choose your avatar.</h1>
       <ProfileIconContainer>
         {iconsList.map((icon, index) => (
-          <div
-            key={`icon_${index}`}
-            onClick={() =>
-              dispatch({ type: 'SET_CURRENT_USER_ICON', payload: icon })
-            }
-          >
+          <div key={`icon_${index}`} onClick={() => handleIconChange(icon.id)}>
             <IconImage size='md' src={icon.url} />
             <FontAwesomeIconWrapper
               className={currentUser.icon?.id === icon.id ? 'active' : ''}

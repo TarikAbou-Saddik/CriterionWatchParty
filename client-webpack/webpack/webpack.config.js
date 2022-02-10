@@ -19,6 +19,9 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.jsx', '.js', '.ts'],
     modules: ['src', 'node_modules'],
+    fallback: {
+      util: require.resolve('util/'),
+    },
   },
   module: {
     rules: [
