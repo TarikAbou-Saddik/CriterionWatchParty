@@ -1,11 +1,7 @@
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface ChatWrapperProps {
-  hidden?: boolean;
-}
-
-export const ChatWrapper = styled.main<ChatWrapperProps>`
+export const ChatWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg};
   color: ${({ theme }) => theme.textPrimary};
   padding: 5vh;
@@ -20,25 +16,7 @@ export const ChatWrapper = styled.main<ChatWrapperProps>`
   opacity: ${({ hidden }) => (hidden ? 0 : 1)};
 `;
 
-export const ChatHideButton = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  left: -10px;
-  cursor: pointer;
-  transition: all 0.3s ease-in;
-  transition-property: transform opacity;
-`;
-
-export const ChatHideButtonChevron = styled(FontAwesomeIcon)`
-  font-size: 1.5rem;
-  color: ${({ theme }) => theme.bg};
-  background: ${({ theme }) => theme.textSecondary};
-  border-radius: 100%;
-`;
-
+export const ChatHideButton = styled(FontAwesomeIcon)``;
 export const ChatContainer = styled.section``;
 
 export const ChatHeaderWrapper = styled.div`

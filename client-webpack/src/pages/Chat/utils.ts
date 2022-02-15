@@ -8,7 +8,28 @@ export const playPause = () => getPlayButton().click();
 export const getProgressBar = () =>
   getElement('div.vp-progress') as HTMLElement;
 
-export const getVideoEl = () => getElement('div.vp-target') as HTMLVideoElement;
+export const getVideoEl = () => getElement('div.vp-target') as HTMLDivElement;
+
+export const getPlayerBackgroundAndContainer = () => [
+  getElement('div.player-background') as HTMLDivElement,
+  getElement('div.player-container') as HTMLDivElement,
+];
+
+export const getStylesMutationObserver = () => {
+  const config = { attributes: true, attributeFilter: ['style'] };
+  const callback: MutationCallback = mutationsList => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'attributes') {
+        const el = mutation.target as HTMLElement;
+        el.style.width = '100%';
+      }
+    }
+  };
+  return {
+    config,
+    observer: new MutationObserver(callback),
+  };
+};
 
 export const getStateOfFilm = (state: string) => {
   const timestamp = getFilmTimestamp();

@@ -8,8 +8,10 @@ import { Film } from 'Types/';
 import {
   createMessage,
   getPlayButton,
+  getPlayerBackgroundAndContainer,
   getProgressBar,
   getStateOfFilm,
+  getStylesMutationObserver,
   getVideoEl,
 } from './utils';
 import { staticCriterionLogo } from '../../utils/mediaUtils';
@@ -32,7 +34,6 @@ interface ChatProps {
 
 const Chat = ({ film }: ChatProps) => {
   const [messageToSend, setMessageToSend] = useState('');
-  const [hideChat, setHideChat] = useState(false);
   const { state, dispatch } = useChromeStorage();
   const currentUser = state.users[0];
 
@@ -43,12 +44,21 @@ const Chat = ({ film }: ChatProps) => {
         payload: createMessage(currentUser, getStateOfFilm(action), false),
       });
     };
+
     const handlePlayPause = () => handleVideoInteraction('PLAY_PAUSE');
     const handleSkip = () => handleVideoInteraction('SKIP');
 
     const playBtn = getPlayButton();
     const progressBar = getProgressBar();
     const videoEl = getVideoEl();
+    const [backgroundEl, containerEl] = getPlayerBackgroundAndContainer();
+    backgroundEl.style.width = '75%';
+    containerEl.style.width = '100%';
+    backgroundEl.style.transition = 'all 0.6s ease-in';
+    backgroundEl.style.transitionProperty = 'width height';
+    const { config, observer } = getStylesMutationObserver();
+    observer.observe(containerEl, config);
+
     videoEl.addEventListener('click', handlePlayPause);
     playBtn.addEventListener('click', handlePlayPause);
     progressBar.addEventListener('click', handleSkip);
@@ -57,6 +67,7 @@ const Chat = ({ film }: ChatProps) => {
       videoEl.removeEventListener('click', handlePlayPause);
       playBtn.removeEventListener('click', handlePlayPause);
       progressBar.removeEventListener('click', handleSkip);
+      observer.disconnect();
     };
   }, [currentUser.name]);
 
@@ -102,7 +113,7 @@ const Chat = ({ film }: ChatProps) => {
   }, [state.users]);
 
   return (
-    <ChatWrapper hidden={hideChat}>
+    <ChatWrapper id='chat-wrapper'>
       <Header
         displayLink={false}
         displayUserIcon={true}
