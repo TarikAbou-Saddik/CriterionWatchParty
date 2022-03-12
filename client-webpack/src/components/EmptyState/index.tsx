@@ -6,6 +6,8 @@ interface EmptyStateProps {
   url?: string;
 }
 
+const theThirdManUrlDebug =
+  'https://www.criterionchannel.com/videos/steven-soderbergh-and-tony-gilroy-on-the-third-man';
 const criterionChannelUrl = 'https://www.criterionchannel.com/';
 const criterionChannelBrowseUrl = `${criterionChannelUrl}/browse`;
 
@@ -37,7 +39,7 @@ const EmptyState = ({ url }: EmptyStateProps) => {
       ) : (
         <>
           <p>To use the extension, please head to The Criterion Channel.</p>
-          <ButtonLink onClick={() => redirect(criterionChannelUrl, true)}>
+          <ButtonLink onClick={() => redirect(theThirdManUrlDebug, true)}>
             Click Here
           </ButtonLink>
         </>

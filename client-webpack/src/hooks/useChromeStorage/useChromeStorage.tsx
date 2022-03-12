@@ -13,7 +13,7 @@ import {
 } from './types';
 
 const defaultUser: User = {
-  id: uuid(),
+  id: null,
   dateCreated: new Date(),
   name: '',
   icon: iconsList[0],
@@ -21,7 +21,7 @@ const defaultUser: User = {
 
 const welcomeMessage: IMessage = {
   user: {
-    id: uuid(),
+    id: null,
     dateCreated: new Date(),
     name: 'Criterion Bot',
     icon: {
@@ -35,13 +35,13 @@ const welcomeMessage: IMessage = {
 };
 
 const initialState: PartyState = {
-  id: uuid(),
+  id: null,
   restrictPartyControl: false,
   showAudience: false,
   isChatActive: false,
   isPartyCreated: false,
   partyUrl: '',
-  dateCreated: '',
+  dateCreated: new Date(),
   users: [defaultUser],
   messages: [welcomeMessage],
   activeTabUrl: '',
@@ -95,7 +95,6 @@ const reducer = (state: PartyState, action: Action): PartyState => {
         users: getUpdatedUsers('icon', payload, state),
       };
     case 'ADD_MESSAGE':
-      console.log(payload);
       return {
         ...state,
         messages: [...state.messages, payload],

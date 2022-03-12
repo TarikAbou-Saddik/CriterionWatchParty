@@ -13,7 +13,6 @@ export const GlobalStyles = createGlobalStyle`
   body {
     width: ${({ theme }) => theme.width};
     color: ${({ theme }) => theme.textPrimary};
-    overflow-y: hidden;
     border-radius: 15px;
   }
 

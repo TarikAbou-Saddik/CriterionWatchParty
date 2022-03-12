@@ -85,6 +85,7 @@ export const ChatInputSendButton = styled.div`
 
 export const ChatInputSendButtonIcon = styled(FontAwesomeIcon)`
   color: ${({ theme }) => theme.textSecondary};
+  transition: color 0.3s ease-in;
 
   &:hover {
     color: ${({ theme }) => theme.textPrimary};

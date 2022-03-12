@@ -32,7 +32,7 @@ export interface PartyState {
   id?: Id;
   restrictPartyControl: boolean;
   partyUrl: string;
-  dateCreated: string | null;
+  dateCreated: string | Date | null;
   users: User[];
   messages: IMessage[];
   showAudience: boolean;

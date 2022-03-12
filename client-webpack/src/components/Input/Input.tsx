@@ -68,7 +68,13 @@ const StyledInput = styled.div`
 `;
 
 const StyledFontAwesoneIcon = styled(FontAwesomeIcon)`
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 1.3rem;
+  transition: color 0.3s ease-in;
+
+  &:hover {
+    color: ${({ theme }) => theme.textPrimary};
+  }
 `;
 
 export default Input;

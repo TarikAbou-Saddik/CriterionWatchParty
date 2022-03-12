@@ -15,7 +15,6 @@ const GlobalStyles = createGlobalStyle`
     height: ${({ theme }) => theme.height};
     border-bottom: 1px solid black;
     color: ${({ theme }) => theme.textPrimary};
-    overflow-y: hidden;
   }
 
 `;

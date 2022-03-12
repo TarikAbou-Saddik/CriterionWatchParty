@@ -47,7 +47,7 @@ interface MessageTextProps {
 }
 
 const MessageText = styled.p<MessageTextProps>`
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: ${({ isMessage, theme }) =>
     isMessage ? theme.textPrimary : theme.textSecondary};
   font-style: ${({ isMessage }) => (isMessage ? 'normal' : 'italic')};

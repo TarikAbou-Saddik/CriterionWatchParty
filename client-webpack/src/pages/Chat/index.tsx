@@ -27,6 +27,7 @@ import {
   ChatWrapper,
   ChatHeaderFilmInfo,
 } from './styles';
+import EmojiSearch from 'Components/EmojiSearch';
 
 interface ChatProps {
   film: Film;
@@ -34,6 +35,7 @@ interface ChatProps {
 
 const Chat = ({ film }: ChatProps) => {
   const [messageToSend, setMessageToSend] = useState('');
+  const [emojiDescription, setEmojiDescription] = useState('');
   const { state, dispatch } = useChromeStorage();
   const currentUser = state.users[0];
 
@@ -52,10 +54,12 @@ const Chat = ({ film }: ChatProps) => {
     const progressBar = getProgressBar();
     const videoEl = getVideoEl();
     const [backgroundEl, containerEl] = getPlayerBackgroundAndContainer();
+
     backgroundEl.style.width = '75%';
     containerEl.style.width = '100%';
     backgroundEl.style.transition = 'all 0.6s ease-in';
     backgroundEl.style.transitionProperty = 'width height';
+
     const { config, observer } = getStylesMutationObserver();
     observer.observe(containerEl, config);
 
@@ -76,6 +80,18 @@ const Chat = ({ film }: ChatProps) => {
       scrollChatToBottom();
     }
   }, [state.messages.length]);
+
+  useEffect(() => {
+    if (messageToSend.length) {
+      const regex = /:\w+/;
+      const emojiText = messageToSend.match(regex);
+      if (emojiText) {
+        setEmojiDescription(emojiText[0]);
+      } else {
+        setEmojiDescription('');
+      }
+    }
+  }, [messageToSend]);
 
   const handleMessageAdd = () => {
     if (messageToSend.length) {
@@ -102,15 +118,27 @@ const Chat = ({ film }: ChatProps) => {
   };
 
   const handleEnterKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const input = event.target as HTMLInputElement;
+    input.focus();
+    console.log('Focus input element');
     if (event.key === 'Enter') {
       event.preventDefault();
       handleMessageAdd();
     }
   };
 
-  const memberIconUrls = useMemo(() => {
+  const audienceIconUrls = useMemo(() => {
     return state.users.map(user => user.icon?.url as string);
   }, [state.users]);
+
+  const handleEmojiSearch = (emoji: string) => {
+    setMessageToSend(prev => prev.replace(emojiDescription, emoji));
+    setEmojiDescription('');
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMessageToSend(e.target.value);
+  };
 
   return (
     <ChatWrapper id='chat-wrapper'>
@@ -135,13 +163,17 @@ const Chat = ({ film }: ChatProps) => {
             <Message key={`message_${index}`} {...message} />
           ))}
         </ChatMessagesWrapper>
+        <EmojiSearch
+          description={emojiDescription}
+          onClick={emoji => handleEmojiSearch(emoji)}
+        />
         <ChatInputWrapper>
           <ChatInput
             id='chat-input'
             value={messageToSend}
             placeholder='Type a message...'
             onKeyUp={handleEnterKeyUp}
-            onChange={({ target }) => setMessageToSend(target.value)}
+            onChange={onInputChange}
             autoComplete='off'
           />
           <ChatInputSendButton id='chat-input-send' onClick={handleMessageAdd}>
@@ -149,7 +181,7 @@ const Chat = ({ film }: ChatProps) => {
           </ChatInputSendButton>
         </ChatInputWrapper>
       </ChatContainer>
-      <Audience memberIconsUrls={memberIconUrls} />
+      <Audience iconsList={audienceIconUrls} />
     </ChatWrapper>
   );
 };

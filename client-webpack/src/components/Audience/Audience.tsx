@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import IconImage from 'Components/IconImage';
 
 interface AudienceProps {
-  memberIconsUrls: string[];
+  iconsList: string[];
 }
 
-const Audience = ({ memberIconsUrls }: AudienceProps) => (
+const Audience = ({ iconsList }: AudienceProps) => (
   <AudienceWrapper>
     <IconListContainer>
-      {memberIconsUrls.map((iconUrl, index) => (
+      {iconsList.map((iconUrl, index) => (
         <IconImage
           key={`audience_icon_${index}`}
           src={iconUrl}

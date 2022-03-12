@@ -77,7 +77,7 @@ const Setup = () => {
           readOnly
           value={state.partyUrl}
         />
-        <StyledButtonLink to='/setup' onClick={handleCreateParty}>
+        <StyledButtonLink onClick={handleCreateParty}>
           {state.isChatActive ? 'Open Chat' : 'Start Party'}
         </StyledButtonLink>
       </SetupFormWrapper>

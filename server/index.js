@@ -17,24 +17,28 @@ let partyState = {
 };
 
 // Create our WebSocketServer
-const wss = new WebSocket.Server({ port: 8000, clientTracking: true });
+const wss = new WebSocket.Server({ port: 5000, clientTracking: true });
 
 // Listen for any connection and handle client requests.
 wss.on('connection', ws => {
   const partyId = uuidv4();
   ws.id = uuidv4();
 
-  // Handles messages sent.
-  ws.on('message', rawData => {
-    const data = JSON.parse(rawData);
-    if (data.type === PartyMethods.CREATE_PARTY) {
-      ws.send(buildCreatePartyResponse(partyId, ws.id));
-    }
-    if (data.type === PartyMethods.RESTRICT_CONTROL) {
-      handlePartyRestriction(data.payload);
-    }
-  });
+  ws.on('message', rawData => handleMessage(rawData, partyId, ws));
 });
+
+const handleMessage = (rawData, partyId, ws) => {
+  const { type, payload } = JSON.parse(rawData);
+
+  switch (type) {
+    case PartyMethods.CREATE_PARTY:
+      ws.send(buildCreatePartyResponse(partyId, ws.id));
+    case PartyMethods.RESTRICT_CONTROL:
+      handlePartyRestriction(data.payload);
+    default:
+      ws.send(payload);
+  }
+};
 
 const buildCreatePartyResponse = (id, userId) => {
   const payload = {
