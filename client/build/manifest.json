@@ -1,18 +1,35 @@
 {
-  "name": "Criterion Watch Party",
-  "description": "A watch party for The Criterion Channel!",
-  "version": "0.1.0",
   "manifest_version": 3,
+  "name": "Criterion Watch Party",
+  "version": "0.1.0",
+  "description": "A watch party for The Criterion Channel!",
+  "action": {
+    "default_title": "Criterion Channel Watch Party",
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
-      "matches": ["https://www.criterionchannel.com/"],
-      "js": ["/static/js/main.js"]
+      "matches": [
+        "https://*.criterionchannel.com/*",
+        "https://www.criterionchannel.com/*"
+      ],
+      "js": ["./static/js/content.js"],
+      "run_at": "document_end"
     }
   ],
+  "background": {
+    "service_worker": "./static/js/background.js"
+  },
   "icons": {
     "16": "logo192.png",
     "48": "logo192.png",
     "128": "logo512.png"
   },
-  "permissions": ["activeTab"]
+  "permissions": ["activeTab", "storage", "tabs", "scripting"],
+  "web_accessible_resources": [
+    {
+      "resources": ["./static/media/*", "*.svg", "*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
